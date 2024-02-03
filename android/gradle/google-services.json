@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "5591616523",
+    "project_id": "autowahel",
+    "storage_bucket": "autowahel.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:5591616523:android:49e5552c2c785dbced8b0e",
+        "android_client_info": {
+          "package_name": "com.example.autowheelapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDl3J6ZtaR2g0G6QpyoRBe9J3bryDcnsXg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
