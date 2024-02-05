@@ -63,7 +63,7 @@ class MyApp extends StatelessWidget {
             ),
             home: snapshot.data == ConnectivityResult.none
                 ? NoInternetScreen()
-                : ProsepetScreen(),
+                : Report(),
             builder: (context, child) {
               return MediaQuery(
                 data: MediaQuery.of(context).copyWith(textScaleFactor: 0.85),

@@ -1,8 +1,8 @@
-// ignore_for_file: unused_local_variable, duplicate_ignore, unused_element, unnecessary_import
+// ignore_for_file: unused_import, unnecessary_import
+
 import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
-// ignore: unused_import
 import 'package:autowheelapp/account/InvoiceScreen.dart';
 import 'package:autowheelapp/models/Staffmodelpage.dart';
 import 'package:autowheelapp/models/groupmodel.dart';
@@ -11,6 +11,7 @@ import 'package:autowheelapp/utils/widget/widget.dart';
 import 'package:csc_picker/csc_picker.dart';
 import 'package:autowheelapp/utils/widget/String.dart';
 import 'package:autowheelapp/utils/color/Appcolor.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -33,8 +34,10 @@ String interset = "Interst";
 List set = ['Interst', 'Part'];
 String Sale = "SaleEX";
 List ex = ['SaleEX', 'Part'];
+// Api
 String product = "product";
 List uct = ['product', 'Part'];
+// Api
 String relation = "M/s";
 List _relate = ['M/s', 'Mr.', 'Mrs.', "Miss", "Dr."];
 TextEditingController NameController = TextEditingController();
@@ -73,28 +76,41 @@ List<String> detailsList1 = []; // List to store details
 bool isLoading = false;
 // Api
 List<Map<String, dynamic>> drop = [
-  {'id': 0, 'name': 'Source'}
+  {'id': 0, 'name': 'Activity'}
 ];
-String selectedGroupName = "Source";
-int? selectedGroupId;
+String selectedGroupName = "Activity";
+int? selecteddropId;
+Map<String, dynamic>? selecteddropValue;
+// int colorId = 0;
+final TextEditingController dropController = TextEditingController();
 //Api colors
 List<Map<String, dynamic>> color = [
   {'id': 0, 'name': 'Colors'}
 ];
 String selectedcolorName = "Colors";
 int? selectedcolorsId;
+Map<String, dynamic>? selectedcolorValue;
+// int colorId = 0;
+final TextEditingController colorController = TextEditingController();
+
 //Api Enq.type
 List<Map<String, dynamic>> Enqtype = [
-  {'id': 0, 'name': 'Enqtype'}
+  {'id': 0, 'name': 'Praven'}
 ];
-String selectedEnqtypeName = "Enqtype";
+String selectedEnqtypeName = "Praven";
 int? selectedEnqtypeId;
+Map<String, dynamic>? selectedEnqtypeValue;
+
+final TextEditingController EnqtypeController = TextEditingController();
 // Api Occuption
 List<Map<String, dynamic>> Occuption = [
-  {'id': 0, 'name': 'Occuption'}
+  {'id': 0, 'name': 'Bussniss'}
 ];
-String selectedOccuptionName = "Occuption";
+String selectedOccuptionName = "Bussniss";
 int? selectedOccuptionId;
+Map<String, dynamic>? selectedOccuptionValue;
+// int colorId = 0;
+final TextEditingController OccuptionController = TextEditingController();
 // api Prionaity
 List<Map<String, dynamic>> Prionaity = [
   {'id': 0, 'name': 'Prionaity'}
@@ -113,6 +129,9 @@ List<Map<String, dynamic>> Test = [
 ];
 String selectedTestName = "Test";
 int? selectedTestId;
+Map<String, dynamic>? selectedtestValue;
+int testId = 0;
+final TextEditingController testController = TextEditingController();
 // Api title
 List<Map<String, dynamic>> title = [
   {'id': 0, 'name': 'title'}
@@ -334,15 +353,9 @@ class _ProsepetScreenState extends State<ProsepetScreen> {
                         SizedBox(
                           height: 50,
                           width: 80,
-                          child: Container(
-                            padding: const EdgeInsets.all(8),
-                            height: 50,
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                                border:
-                                    Border.all(color: Colors.black, width: 2),
-                                borderRadius: BorderRadius.circular(5)),
-                            child: DropdownButton(
+                          child: dropdownTextfield(
+                            "Any",
+                            DropdownButton(
                               underline: Container(),
                               value: selectedtitleName,
                               dropdownColor:
@@ -570,43 +583,143 @@ class _ProsepetScreenState extends State<ProsepetScreen> {
                     Row(
                       children: [
                         Expanded(
-                            child: Container(
-                          padding: const EdgeInsets.all(8),
-                          height: 50,
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                              border: Border.all(color: Colors.black, width: 2),
-                              borderRadius: BorderRadius.circular(5)),
-                          child: DropdownButton(
-                            underline: Container(),
-                            value: selectedEnqtypeName,
-                            dropdownColor:
-                                const Color.fromARGB(255, 211, 247, 212),
-                            icon: Icon(Icons.keyboard_arrow_down_outlined,
-                                size: h * 0.030, color: AppColor.kBlack),
-                            isExpanded: true,
-                            items: Enqtype.map((item) {
-                              return DropdownMenuItem(
-                                value: item['name'],
-                                child: Text(
-                                  item['name'],
-                                  style: TextStyle(fontWeight: FontWeight.bold),
+                          child: Container(
+                            // padding: const EdgeInsets.all(8),
+                            height: 50,
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                                border:
+                                    Border.all(color: Colors.black, width: 2),
+                                borderRadius: BorderRadius.circular(5)),
+                            child: DropdownButtonHideUnderline(
+                              child: DropdownButton2<Map<String, dynamic>>(
+                                isExpanded: true,
+                                hint: Text(
+                                  'Select Enqtype',
+                                  style: TextStyle(
+                                      fontSize: 14,
+                                      color: AppColor.kBlack,
+                                      fontWeight: FontWeight.bold),
                                 ),
-                              );
-                            }).toList(),
-                            onChanged: (value) {
-                              setState(() {
-                                selectedEnqtypeName = value.toString();
-                                selectedEnqtypeId = Enqtype.firstWhere(
-                                            (item) => item['name'] == value)
-                                        .containsKey('id')
-                                    ? Enqtype.firstWhere(
-                                        (item) => item['name'] == value)['id']
-                                    : null;
-                              });
-                            },
+                                items: Enqtype.map((item) => DropdownMenuItem(
+                                      onTap: () {
+                                        selectedEnqtypeId = item['id'];
+                                      },
+                                      value: item,
+                                      child: Row(
+                                        children: [
+                                          Text(
+                                            item['name'].toString(),
+                                            style: const TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        ],
+                                      ),
+                                    )).toList(),
+                                value: selectedEnqtypeValue,
+                                onChanged: (value) {
+                                  setState(() {
+                                    selectedEnqtypeValue = value;
+                                  });
+                                },
+                                buttonStyleData: const ButtonStyleData(
+                                  padding: EdgeInsets.symmetric(horizontal: 16),
+                                  height: 40,
+                                  width: 200,
+                                ),
+                                dropdownStyleData: const DropdownStyleData(
+                                  maxHeight: 200,
+                                ),
+                                menuItemStyleData: const MenuItemStyleData(
+                                  height: 40,
+                                ),
+                                dropdownSearchData: DropdownSearchData(
+                                  searchController: EnqtypeController,
+                                  searchInnerWidgetHeight: 50,
+                                  searchInnerWidget: Container(
+                                    height: 50,
+                                    padding: const EdgeInsets.only(
+                                      top: 8,
+                                      bottom: 4,
+                                      right: 8,
+                                      left: 8,
+                                    ),
+                                    child: TextFormField(
+                                      expands: true,
+                                      readOnly: false,
+                                      maxLines: null,
+                                      controller: EnqtypeController,
+                                      onChanged: (value) {
+                                        setState(() {
+                                          // Filter the Prionaity list based on the search value
+                                          Enqtype.where((item) => item['name']
+                                                  .toString()
+                                                  .toLowerCase()
+                                                  .contains(
+                                                      value.toLowerCase()))
+                                              .toList();
+                                        });
+                                      },
+                                      decoration: InputDecoration(
+                                        isDense: true,
+                                        contentPadding:
+                                            const EdgeInsets.symmetric(
+                                          horizontal: 10,
+                                          vertical: 8,
+                                        ),
+                                        hintText: 'Search for a Enqtype...',
+                                        hintStyle:
+                                            const TextStyle(fontSize: 12),
+                                        border: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                onMenuStateChange: (isOpen) {
+                                  if (!isOpen) {
+                                    EnqtypeController.clear();
+                                  }
+                                },
+                              ),
+                            ),
                           ),
-                        )),
+                          //     dropdownTextfield(
+                          //   "Enqtype",
+                          //   DropdownButton(
+                          //     underline: Container(),
+                          //     value: selectedEnqtypeName,
+                          //     dropdownColor:
+                          //         const Color.fromARGB(255, 211, 247, 212),
+                          //     icon: Icon(Icons.keyboard_arrow_down_outlined,
+                          //         size: h * 0.030, color: AppColor.kBlack),
+                          //     isExpanded: true,
+                          //     items: Enqtype.map((item) {
+                          //       return DropdownMenuItem(
+                          //         value: item['name'],
+                          //         child: Text(
+                          //           item['name'],
+                          //           style: TextStyle(fontWeight: FontWeight.bold),
+                          //         ),
+                          //       );
+                          //     }).toList(),
+                          //     onChanged: (value) {
+                          //       setState(() {
+                          //         selectedEnqtypeName = value.toString();
+                          //         selectedEnqtypeId = Enqtype.firstWhere(
+                          //                     (item) => item['name'] == value)
+                          //                 .containsKey('id')
+                          //             ? Enqtype.firstWhere(
+                          //                 (item) => item['name'] == value)['id']
+                          //             : null;
+                          //       });
+                          //     },
+                          //   ),
+                          // )
+                        ),
                         addhorizontalSpace(10),
                         SizedBox(
                           width: 50,
@@ -639,44 +752,144 @@ class _ProsepetScreenState extends State<ProsepetScreen> {
                     Row(
                       children: [
                         Expanded(
-                            child: Container(
-                          padding: const EdgeInsets.all(8),
-                          height: 50,
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                              border: Border.all(color: Colors.black, width: 2),
-                              borderRadius: BorderRadius.circular(5)),
-                          child: DropdownButton(
-                            underline: Container(),
-                            value: selectedOccuptionName,
-                            dropdownColor:
-                                const Color.fromARGB(255, 211, 247, 212),
-                            icon: Icon(Icons.keyboard_arrow_down_outlined,
-                                size: h * 0.030, color: AppColor.kBlack),
-                            isExpanded: true,
-                            items: Occuption.map((item) {
-                              return DropdownMenuItem(
-                                value: item['name'],
-                                child: Text(
-                                  item['name'],
-                                  style: TextStyle(fontWeight: FontWeight.bold),
+                          child: Container(
+                            // padding: const EdgeInsets.all(8),
+                            height: 50,
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                                border:
+                                    Border.all(color: Colors.black, width: 2),
+                                borderRadius: BorderRadius.circular(5)),
+                            child: DropdownButtonHideUnderline(
+                              child: DropdownButton2<Map<String, dynamic>>(
+                                isExpanded: true,
+                                hint: Text(
+                                  'Select Occuption',
+                                  style: TextStyle(
+                                      fontSize: 14,
+                                      color: AppColor.kBlack,
+                                      fontWeight: FontWeight.bold),
                                 ),
-                              );
-                            }).toList(),
-                            onChanged: (value) {
-                              setState(() {
-                                selectedOccuptionName = value.toString();
-                                selectedOccuptionId = Occuption.firstWhere(
-                                            (item) => item['name'] == value)
-                                        .containsKey('id')
-                                    ? Occuption.firstWhere(
-                                        (item) => item['name'] == value)['id']
-                                    : null;
-                                log(selectedOccuptionId.toString());
-                              });
-                            },
+                                items: Occuption.map((item) => DropdownMenuItem(
+                                      onTap: () {
+                                        selectedOccuptionId = item['id'];
+                                      },
+                                      value: item,
+                                      child: Row(
+                                        children: [
+                                          Text(
+                                            item['name'].toString(),
+                                            style: const TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        ],
+                                      ),
+                                    )).toList(),
+                                value: selectedOccuptionValue,
+                                onChanged: (value) {
+                                  setState(() {
+                                    selectedOccuptionValue = value;
+                                  });
+                                },
+                                buttonStyleData: const ButtonStyleData(
+                                  padding: EdgeInsets.symmetric(horizontal: 16),
+                                  height: 40,
+                                  width: 200,
+                                ),
+                                dropdownStyleData: const DropdownStyleData(
+                                  maxHeight: 200,
+                                ),
+                                menuItemStyleData: const MenuItemStyleData(
+                                  height: 40,
+                                ),
+                                dropdownSearchData: DropdownSearchData(
+                                  searchController: testController,
+                                  searchInnerWidgetHeight: 50,
+                                  searchInnerWidget: Container(
+                                    height: 50,
+                                    padding: const EdgeInsets.only(
+                                      top: 8,
+                                      bottom: 4,
+                                      right: 8,
+                                      left: 8,
+                                    ),
+                                    child: TextFormField(
+                                      expands: true,
+                                      readOnly: false,
+                                      maxLines: null,
+                                      controller: OccuptionController,
+                                      onChanged: (value) {
+                                        setState(() {
+                                          // Filter the Prionaity list based on the search value
+                                          Occuption.where((item) => item['name']
+                                                  .toString()
+                                                  .toLowerCase()
+                                                  .contains(
+                                                      value.toLowerCase()))
+                                              .toList();
+                                        });
+                                      },
+                                      decoration: InputDecoration(
+                                        isDense: true,
+                                        contentPadding:
+                                            const EdgeInsets.symmetric(
+                                          horizontal: 10,
+                                          vertical: 8,
+                                        ),
+                                        hintText: 'Search for a Occuption...',
+                                        hintStyle:
+                                            const TextStyle(fontSize: 12),
+                                        border: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                onMenuStateChange: (isOpen) {
+                                  if (!isOpen) {
+                                    OccuptionController.clear();
+                                  }
+                                },
+                              ),
+                            ),
                           ),
-                        )),
+                          //     dropdownTextfield(
+                          //   "Occuption",
+                          //   DropdownButton(
+                          //     underline: Container(),
+                          //     value: selectedOccuptionName,
+                          //     dropdownColor:
+                          //         const Color.fromARGB(255, 211, 247, 212),
+                          //     icon: Icon(Icons.keyboard_arrow_down_outlined,
+                          //         size: h * 0.030, color: AppColor.kBlack),
+                          //     isExpanded: true,
+                          //     items: Occuption.map((item) {
+                          //       return DropdownMenuItem(
+                          //         value: item['name'],
+                          //         child: Text(
+                          //           item['name'],
+                          //           style: TextStyle(fontWeight: FontWeight.bold),
+                          //         ),
+                          //       );
+                          //     }).toList(),
+                          //     onChanged: (value) {
+                          //       setState(() {
+                          //         selectedOccuptionName = value.toString();
+                          //         selectedOccuptionId = Occuption.firstWhere(
+                          //                     (item) => item['name'] == value)
+                          //                 .containsKey('id')
+                          //             ? Occuption.firstWhere(
+                          //                 (item) => item['name'] == value)['id']
+                          //             : null;
+                          //         log(selectedOccuptionId.toString());
+                          //       });
+                          //     },
+                          //   ),
+                          // )
+                        ),
                         addhorizontalSpace(10),
                         SizedBox(
                           width: 50,
@@ -708,15 +921,9 @@ class _ProsepetScreenState extends State<ProsepetScreen> {
                     Row(
                       children: [
                         Expanded(
-                          child: Container(
-                            width: double.infinity,
-                            padding: EdgeInsets.all(5),
-                            height: 50,
-                            decoration: BoxDecoration(
-                              border: Border.all(color: Colors.black, width: 2),
-                              borderRadius: BorderRadius.circular(5),
-                            ),
-                            child: Row(
+                          child: dropdownTextfield(
+                            "Staff",
+                            Row(
                               children: [
                                 Expanded(
                                   child: DropdownButton<String>(
@@ -779,45 +986,149 @@ class _ProsepetScreenState extends State<ProsepetScreen> {
                     Row(
                       children: [
                         Expanded(
-                            child: Container(
-                          padding: const EdgeInsets.all(8),
-                          height: 50,
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                              border: Border.all(color: Colors.black, width: 2),
-                              borderRadius: BorderRadius.circular(5)),
-                          child: DropdownButton(
-                            underline: Container(),
-                            value: selectedGroupName,
-                            dropdownColor:
-                                const Color.fromARGB(255, 211, 247, 212),
-                            icon: Icon(Icons.keyboard_arrow_down_outlined,
-                                size: h * 0.030, color: AppColor.kBlack),
-                            isExpanded: true,
-                            items: drop.map((item) {
-                              return DropdownMenuItem(
-                                value: item['name'],
-                                child: Text(
-                                  item['name'],
-                                  style: TextStyle(fontWeight: FontWeight.bold),
+                          child: Container(
+                            // padding: const EdgeInsets.all(8),
+                            height: 50,
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                                border:
+                                    Border.all(color: Colors.black, width: 2),
+                                borderRadius: BorderRadius.circular(5)),
+                            child: DropdownButtonHideUnderline(
+                              child: DropdownButton2<Map<String, dynamic>>(
+                                isExpanded: true,
+                                hint: Text(
+                                  'Select Sourch',
+                                  style: TextStyle(
+                                      fontSize: 14,
+                                      color: AppColor.kBlack,
+                                      fontWeight: FontWeight.bold),
                                 ),
-                              );
-                            }).toList(),
-                            onChanged: (value) {
-                              setState(() {
-                                selectedGroupName = value.toString();
-                                selectedGroupId = drop
-                                        .firstWhere(
-                                            (item) => item['name'] == value)
-                                        .containsKey('id')
-                                    ? drop.firstWhere(
-                                        (item) => item['name'] == value)['id']
-                                    : null;
-                                log(selectedGroupId.toString());
-                              });
-                            },
+                                items: drop
+                                    .map((item) => DropdownMenuItem(
+                                          onTap: () {
+                                            selecteddropId = item['id'];
+                                          },
+                                          value: item,
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                item['name'].toString(),
+                                                style: const TextStyle(
+                                                    fontSize: 16,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                            ],
+                                          ),
+                                        ))
+                                    .toList(),
+                                value: selecteddropValue,
+                                onChanged: (value) {
+                                  setState(() {
+                                    selecteddropValue = value;
+                                  });
+                                },
+                                buttonStyleData: const ButtonStyleData(
+                                  padding: EdgeInsets.symmetric(horizontal: 16),
+                                  height: 40,
+                                  width: 200,
+                                ),
+                                dropdownStyleData: const DropdownStyleData(
+                                  maxHeight: 200,
+                                ),
+                                menuItemStyleData: const MenuItemStyleData(
+                                  height: 40,
+                                ),
+                                dropdownSearchData: DropdownSearchData(
+                                  searchController: testController,
+                                  searchInnerWidgetHeight: 50,
+                                  searchInnerWidget: Container(
+                                    height: 50,
+                                    padding: const EdgeInsets.only(
+                                      top: 8,
+                                      bottom: 4,
+                                      right: 8,
+                                      left: 8,
+                                    ),
+                                    child: TextFormField(
+                                      expands: true,
+                                      readOnly: false,
+                                      maxLines: null,
+                                      controller: dropController,
+                                      onChanged: (value) {
+                                        setState(() {
+                                          // Filter the Prionaity list based on the search value
+                                          drop
+                                              .where((item) => item['name']
+                                                  .toString()
+                                                  .toLowerCase()
+                                                  .contains(
+                                                      value.toLowerCase()))
+                                              .toList();
+                                        });
+                                      },
+                                      decoration: InputDecoration(
+                                        isDense: true,
+                                        contentPadding:
+                                            const EdgeInsets.symmetric(
+                                          horizontal: 10,
+                                          vertical: 8,
+                                        ),
+                                        hintText: 'Search for a Sourch...',
+                                        hintStyle:
+                                            const TextStyle(fontSize: 12),
+                                        border: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                onMenuStateChange: (isOpen) {
+                                  if (!isOpen) {
+                                    dropController.clear();
+                                  }
+                                },
+                              ),
+                            ),
                           ),
-                        )),
+                          //     dropdownTextfield(
+                          //   "Sousce",
+                          //   DropdownButton(
+                          //     underline: Container(),
+                          // value: selectedGroupName,
+                          //     dropdownColor:
+                          //         const Color.fromARGB(255, 211, 247, 212),
+                          //     icon: Icon(Icons.keyboard_arrow_down_outlined,
+                          //         size: h * 0.030, color: AppColor.kBlack),
+                          //     isExpanded: true,
+                          //     items: drop.map((item) {
+                          //       return DropdownMenuItem(
+                          //         value: item['name'],
+                          //         child: Text(
+                          //           item['name'],
+                          //           style: TextStyle(fontWeight: FontWeight.bold),
+                          //         ),
+                          //       );
+                          //     }).toList(),
+                          //     onChanged: (value) {
+                          //       setState(() {
+                          //         selectedGroupName = value.toString();
+                          //         selectedGroupId = drop
+                          //                 .firstWhere(
+                          //                     (item) => item['name'] == value)
+                          //                 .containsKey('id')
+                          //             ? drop.firstWhere(
+                          //                 (item) => item['name'] == value)['id']
+                          //             : null;
+                          //         log(selectedGroupId.toString());
+                          //       });
+                          //     },
+                          //   ),
+                          // )
+                        ),
                         addhorizontalSpace(10),
                         SizedBox(
                           width: 50,
@@ -852,36 +1163,111 @@ class _ProsepetScreenState extends State<ProsepetScreen> {
                       children: [
                         Expanded(
                           child: Container(
-                            padding: const EdgeInsets.all(8),
+                            // padding: const EdgeInsets.all(8),
                             height: 50,
                             width: double.infinity,
                             decoration: BoxDecoration(
                                 border:
                                     Border.all(color: Colors.black, width: 2),
                                 borderRadius: BorderRadius.circular(5)),
-                            child: DropdownButton(
-                              underline: Container(),
-                              value: interset,
-                              dropdownColor:
-                                  const Color.fromARGB(255, 211, 247, 212),
-                              icon: Icon(Icons.keyboard_arrow_down_outlined,
-                                  size: h * 0.030, color: AppColor.kBlack),
-                              isExpanded: true,
-                              items: set.map((value) {
-                                return DropdownMenuItem(
-                                  value: value,
-                                  child: Text(
-                                    value,
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold),
+                            child: DropdownButtonHideUnderline(
+                              child: DropdownButton2<Map<String, dynamic>>(
+                                isExpanded: true,
+                                hint: Text(
+                                  'Select Color',
+                                  style: TextStyle(
+                                      fontSize: 14,
+                                      color: AppColor.kBlack,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                items: color
+                                    .map((item) => DropdownMenuItem(
+                                          onTap: () {
+                                            selectedcolorsId = item['id'];
+                                          },
+                                          value: item,
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                item['name'].toString(),
+                                                style: const TextStyle(
+                                                    fontSize: 16,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                            ],
+                                          ),
+                                        ))
+                                    .toList(),
+                                value: selectedcolorValue,
+                                onChanged: (value) {
+                                  setState(() {
+                                    selectedcolorValue = value;
+                                  });
+                                },
+                                buttonStyleData: const ButtonStyleData(
+                                  padding: EdgeInsets.symmetric(horizontal: 16),
+                                  height: 40,
+                                  width: 200,
+                                ),
+                                dropdownStyleData: const DropdownStyleData(
+                                  maxHeight: 200,
+                                ),
+                                menuItemStyleData: const MenuItemStyleData(
+                                  height: 40,
+                                ),
+                                dropdownSearchData: DropdownSearchData(
+                                  searchController: testController,
+                                  searchInnerWidgetHeight: 50,
+                                  searchInnerWidget: Container(
+                                    height: 50,
+                                    padding: const EdgeInsets.only(
+                                      top: 8,
+                                      bottom: 4,
+                                      right: 8,
+                                      left: 8,
+                                    ),
+                                    child: TextFormField(
+                                      expands: true,
+                                      readOnly: false,
+                                      maxLines: null,
+                                      controller: colorController,
+                                      onChanged: (value) {
+                                        setState(() {
+                                          // Filter the Prionaity list based on the search value
+                                          color
+                                              .where((item) => item['name']
+                                                  .toString()
+                                                  .toLowerCase()
+                                                  .contains(
+                                                      value.toLowerCase()))
+                                              .toList();
+                                        });
+                                      },
+                                      decoration: InputDecoration(
+                                        isDense: true,
+                                        contentPadding:
+                                            const EdgeInsets.symmetric(
+                                          horizontal: 10,
+                                          vertical: 8,
+                                        ),
+                                        hintText: 'Search for a color...',
+                                        hintStyle:
+                                            const TextStyle(fontSize: 12),
+                                        border: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                        ),
+                                      ),
+                                    ),
                                   ),
-                                );
-                              }).toList(),
-                              onChanged: (value) {
-                                setState(() {
-                                  interset = value.toString();
-                                });
-                              },
+                                ),
+                                onMenuStateChange: (isOpen) {
+                                  if (!isOpen) {
+                                    colorController.clear();
+                                  }
+                                },
+                              ),
                             ),
                           ),
                         ),
@@ -913,14 +1299,9 @@ class _ProsepetScreenState extends State<ProsepetScreen> {
                     Row(
                       children: [
                         Expanded(
-                            child: Container(
-                          padding: const EdgeInsets.all(8),
-                          height: 50,
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                              border: Border.all(color: Colors.black, width: 2),
-                              borderRadius: BorderRadius.circular(5)),
-                          child: DropdownButton(
+                            child: dropdownTextfield(
+                          "Prionarity",
+                          DropdownButton(
                             underline: Container(),
                             value: selectedPrionaityName,
                             dropdownColor:
@@ -994,14 +1375,9 @@ class _ProsepetScreenState extends State<ProsepetScreen> {
                     Row(
                       children: [
                         Expanded(
-                            child: Container(
-                          padding: const EdgeInsets.all(8),
-                          height: 50,
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                              border: Border.all(color: Colors.black, width: 2),
-                              borderRadius: BorderRadius.circular(5)),
-                          child: DropdownButton(
+                            child: dropdownTextfield(
+                          "Product",
+                          DropdownButton(
                             underline: Container(),
                             value: selectedprodustName,
                             dropdownColor:
@@ -1064,45 +1440,115 @@ class _ProsepetScreenState extends State<ProsepetScreen> {
                     Row(
                       children: [
                         Expanded(
-                            child: Container(
-                          padding: const EdgeInsets.all(8),
-                          height: 50,
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                              border: Border.all(color: Colors.black, width: 2),
-                              borderRadius: BorderRadius.circular(5)),
-                          child: DropdownButton(
-                            underline: Container(),
-                            value: selectedcolorName,
-                            dropdownColor:
-                                const Color.fromARGB(255, 211, 247, 212),
-                            icon: Icon(Icons.keyboard_arrow_down_outlined,
-                                size: h * 0.030, color: AppColor.kBlack),
-                            isExpanded: true,
-                            items: color.map((item) {
-                              return DropdownMenuItem(
-                                value: item['name'],
-                                child: Text(
-                                  item['name'],
-                                  style: TextStyle(fontWeight: FontWeight.bold),
+                          child: Container(
+                            // padding: const EdgeInsets.all(8),
+                            height: 50,
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                                border:
+                                    Border.all(color: Colors.black, width: 2),
+                                borderRadius: BorderRadius.circular(5)),
+                            child: DropdownButtonHideUnderline(
+                              child: DropdownButton2<Map<String, dynamic>>(
+                                isExpanded: true,
+                                hint: Text(
+                                  'Select Color',
+                                  style: TextStyle(
+                                      fontSize: 14,
+                                      color: AppColor.kBlack,
+                                      fontWeight: FontWeight.bold),
                                 ),
-                              );
-                            }).toList(),
-                            onChanged: (value) {
-                              setState(() {
-                                selectedcolorName = value.toString();
-                                selectedcolorsId = color
-                                        .firstWhere(
-                                            (item) => item['name'] == value)
-                                        .containsKey('id')
-                                    ? color.firstWhere(
-                                        (item) => item['name'] == value)['id']
-                                    : null;
-                                log(selectedcolorsId.toString());
-                              });
-                            },
+                                items: color
+                                    .map((item) => DropdownMenuItem(
+                                          onTap: () {
+                                            selectedcolorsId = item['id'];
+                                          },
+                                          value: item,
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                item['name'].toString(),
+                                                style: const TextStyle(
+                                                    fontSize: 16,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                            ],
+                                          ),
+                                        ))
+                                    .toList(),
+                                value: selectedcolorValue,
+                                onChanged: (value) {
+                                  setState(() {
+                                    selectedcolorValue = value;
+                                  });
+                                },
+                                buttonStyleData: const ButtonStyleData(
+                                  padding: EdgeInsets.symmetric(horizontal: 16),
+                                  height: 40,
+                                  width: 200,
+                                ),
+                                dropdownStyleData: const DropdownStyleData(
+                                  maxHeight: 200,
+                                ),
+                                menuItemStyleData: const MenuItemStyleData(
+                                  height: 40,
+                                ),
+                                dropdownSearchData: DropdownSearchData(
+                                  searchController: testController,
+                                  searchInnerWidgetHeight: 50,
+                                  searchInnerWidget: Container(
+                                    height: 50,
+                                    padding: const EdgeInsets.only(
+                                      top: 8,
+                                      bottom: 4,
+                                      right: 8,
+                                      left: 8,
+                                    ),
+                                    child: TextFormField(
+                                      expands: true,
+                                      readOnly: false,
+                                      maxLines: null,
+                                      controller: colorController,
+                                      onChanged: (value) {
+                                        setState(() {
+                                          // Filter the Prionaity list based on the search value
+                                          color
+                                              .where((item) => item['name']
+                                                  .toString()
+                                                  .toLowerCase()
+                                                  .contains(
+                                                      value.toLowerCase()))
+                                              .toList();
+                                        });
+                                      },
+                                      decoration: InputDecoration(
+                                        isDense: true,
+                                        contentPadding:
+                                            const EdgeInsets.symmetric(
+                                          horizontal: 10,
+                                          vertical: 8,
+                                        ),
+                                        hintText: 'Search for a color...',
+                                        hintStyle:
+                                            const TextStyle(fontSize: 12),
+                                        border: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                onMenuStateChange: (isOpen) {
+                                  if (!isOpen) {
+                                    colorController.clear();
+                                  }
+                                },
+                              ),
+                            ),
                           ),
-                        )),
+                        ),
                         addhorizontalSpace(10),
                         SizedBox(
                           width: 50,
@@ -1143,45 +1589,145 @@ class _ProsepetScreenState extends State<ProsepetScreen> {
                     Row(
                       children: [
                         Expanded(
-                            child: Container(
-                          padding: const EdgeInsets.all(8),
-                          height: 50,
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                              border: Border.all(color: Colors.black, width: 2),
-                              borderRadius: BorderRadius.circular(5)),
-                          child: DropdownButton(
-                            underline: Container(),
-                            value: selectedTestName,
-                            dropdownColor:
-                                const Color.fromARGB(255, 211, 247, 212),
-                            icon: Icon(Icons.keyboard_arrow_down_outlined,
-                                size: h * 0.030, color: AppColor.kBlack),
-                            isExpanded: true,
-                            items: Test.map((item) {
-                              return DropdownMenuItem(
-                                value: item['name'],
-                                child: Text(
-                                  item['name'],
-                                  style: TextStyle(fontWeight: FontWeight.bold),
+                          child: Container(
+                            // padding: const EdgeInsets.all(8),
+                            height: 50,
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                                border:
+                                    Border.all(color: Colors.black, width: 2),
+                                borderRadius: BorderRadius.circular(5)),
+                            child: DropdownButtonHideUnderline(
+                              child: DropdownButton2<Map<String, dynamic>>(
+                                isExpanded: true,
+                                hint: Text(
+                                  'Select Test',
+                                  style: TextStyle(
+                                      fontSize: 14,
+                                      color: AppColor.kBlack,
+                                      fontWeight: FontWeight.bold),
                                 ),
-                              );
-                            }).toList(),
-                            onChanged: (value) {
-                              setState(() {
-                                selectedTestName = value.toString();
-                                selectedTestId = Test.firstWhere(
-                                            (item) => item['name'] == value)
-                                        .containsKey('id')
-                                    ? Test.firstWhere(
-                                        (item) => item['name'] == value)['id']
-                                    : null;
-                                log(selectedTestId.toString());
-                                // print(selectedTestId.toString());
-                              });
-                            },
+                                items: Test.map((item) => DropdownMenuItem(
+                                      onTap: () {
+                                        testId = item['id'];
+                                      },
+                                      value: item,
+                                      child: Row(
+                                        children: [
+                                          Text(
+                                            item['name'].toString(),
+                                            style: const TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        ],
+                                      ),
+                                    )).toList(),
+                                value: selectedtestValue,
+                                onChanged: (value) {
+                                  setState(() {
+                                    selectedtestValue = value;
+                                  });
+                                },
+                                buttonStyleData: const ButtonStyleData(
+                                  padding: EdgeInsets.symmetric(horizontal: 16),
+                                  height: 40,
+                                  width: 200,
+                                ),
+                                dropdownStyleData: const DropdownStyleData(
+                                  maxHeight: 200,
+                                ),
+                                menuItemStyleData: const MenuItemStyleData(
+                                  height: 40,
+                                ),
+                                dropdownSearchData: DropdownSearchData(
+                                  searchController: testController,
+                                  searchInnerWidgetHeight: 50,
+                                  searchInnerWidget: Container(
+                                    height: 50,
+                                    padding: const EdgeInsets.only(
+                                      top: 8,
+                                      bottom: 4,
+                                      right: 8,
+                                      left: 8,
+                                    ),
+                                    child: TextFormField(
+                                      expands: true,
+                                      readOnly: false,
+                                      maxLines: null,
+                                      controller: testController,
+                                      onChanged: (value) {
+                                        setState(() {
+                                          // Filter the Prionaity list based on the search value
+                                          Test.where((item) => item['name']
+                                                  .toString()
+                                                  .toLowerCase()
+                                                  .contains(
+                                                      value.toLowerCase()))
+                                              .toList();
+                                        });
+                                      },
+                                      decoration: InputDecoration(
+                                        isDense: true,
+                                        contentPadding:
+                                            const EdgeInsets.symmetric(
+                                          horizontal: 10,
+                                          vertical: 8,
+                                        ),
+                                        hintText: 'Search for a Test...',
+                                        hintStyle:
+                                            const TextStyle(fontSize: 12),
+                                        border: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                onMenuStateChange: (isOpen) {
+                                  if (!isOpen) {
+                                    testController.clear();
+                                  }
+                                },
+                              ),
+                            ),
                           ),
-                        )),
+                          //   dropdownTextfield(
+                          // "Test",
+                          // DropdownButton(
+                          //   underline: Container(),
+                          //   value: selectedTestName,
+                          //   dropdownColor:
+                          //       const Color.fromARGB(255, 211, 247, 212),
+                          //   icon: Icon(Icons.keyboard_arrow_down_outlined,
+                          //       size: h * 0.030, color: AppColor.kBlack),
+                          //   isExpanded: true,
+                          //   items: Test.map((item) {
+                          //     return DropdownMenuItem(
+                          //       value: item['name'],
+                          //       child: Text(
+                          //         item['name'],
+                          //         style: TextStyle(fontWeight: FontWeight.bold),
+                          //       ),
+                          //     );
+                          //   }).toList(),
+                          //   onChanged: (value) {
+                          //     setState(() {
+                          //       selectedTestName = value.toString();
+                          //       selectedTestId = Test.firstWhere(
+                          //                   (item) => item['name'] == value)
+                          //               .containsKey('id')
+                          //           ? Test.firstWhere(
+                          //               (item) => item['name'] == value)['id']
+                          //           : null;
+                          //       log(selectedTestId.toString());
+                          //       // print(selectedTestId.toString());
+                          //     });
+                          //   },
+                          // ),
+                          // )
+                        ),
                         addhorizontalSpace(10),
                         SizedBox(
                           width: 50,
@@ -1363,7 +1909,7 @@ class _ProsepetScreenState extends State<ProsepetScreen> {
                     addVerticalSpace(10),
                     InkWell(
                         onTap: () {
-                          // postProspect();
+                          postProspect();
                           getLocation();
                         },
                         child: Button(savetxt)),
@@ -1438,7 +1984,7 @@ class _ProsepetScreenState extends State<ProsepetScreen> {
             goruppartmodelFromJson(response.body);
 
         drop.clear();
-        drop.add({'id': 0, 'name': 'Source'});
+        drop.add({'id': 0, 'name': 'Activity'});
         for (var item in goruppartmodelList) {
           drop.add({'id': item.id, 'name': item.name});
         }
@@ -1486,7 +2032,7 @@ class _ProsepetScreenState extends State<ProsepetScreen> {
             goruppartmodelFromJson(response.body);
 
         Enqtype.clear();
-        Enqtype.add({'id': 0, 'name': 'Enqtype'});
+        Enqtype.add({'id': 0, 'name': 'Praven'});
         for (var item in goruppartmodelList) {
           Enqtype.add({'id': item.id, 'name': item.name});
         }
@@ -1510,7 +2056,7 @@ class _ProsepetScreenState extends State<ProsepetScreen> {
             goruppartmodelFromJson(response.body);
 
         Occuption.clear();
-        Occuption.add({'id': 0, 'name': 'Occuption'});
+        Occuption.add({'id': 0, 'name': 'Bussniss'});
         for (var item in goruppartmodelList) {
           Occuption.add({'id': item.id, 'name': item.name});
         }
@@ -1634,24 +2180,24 @@ class _ProsepetScreenState extends State<ProsepetScreen> {
       "Ref_Time": "${selectedTime1.hour}:${selectedTime1.minute}",
       "Title_id": selectedtitleId,
       "Gender_Name": "Male",
-      "Customer_Name": NameController.text.toString(),
+      "Customer_Name": "${NameController.text.toString()}",
       "Contact_Name": "raj1",
-      "SanOff_Name": SoController.text.toString(),
-      "Address_Details": Addresscontroller.text.toString(),
+      "SanOff_Name": "${SoController.text.toString()}",
+      "Address_Details": "${Addresscontroller.text.toString()}",
       "City_Id": "2",
       "City": "jaipur",
-      "Pin_Code": PinController.text.toString(),
+      "Pin_Code": "${PinController.text.toString()}",
       "Mob_No": MobileControleer.text.toString(),
       "Phon_No": "phon",
-      "Std_Code": StdController.text.toString(),
+      "Std_Code": "${StdController.text.toString()}",
       "Fax_No": "fax",
-      "Email_Id": Emailcontroller.text.toString(),
+      "Email_Id": "${Emailcontroller.text.toString()}",
       "Birthday_Date": datepickar2.text,
       "Anniversary_Date": datepickar3.text,
       "Enq_Type": selectedEnqtypeId,
       "Mode_Type": "modeltype",
       "Occupation": selectedOccuptionId,
-      "Income": IncomeController.text.toString(),
+      "Income": "${IncomeController.text.toString()}",
       "EnqGenBy_Id": staffList
           .firstWhere((staff) => staff.staffName == selectedStaffId,
               orElse: () => Staffmodel(id: 0, staffName: ''))
@@ -1660,7 +2206,7 @@ class _ProsepetScreenState extends State<ProsepetScreen> {
           .firstWhere((staff) => staff.staffName == selectedStaffId,
               orElse: () => Staffmodel(id: 0, staffName: ''))
           .id,
-      "Source_Id": selectedGroupId,
+      "Source_Id": selecteddropId,
       "NoOfVisitor": "NoOfVisitor",
       "Scheme": SchemeController.text.toString(),
       "Priority": selectedPrionaityId,
@@ -1668,18 +2214,20 @@ class _ProsepetScreenState extends State<ProsepetScreen> {
       "Model_Id": selectedprodustId,
       "Colour_Id": selectedcolorsId,
       "Remark_interest": "Remark_interest",
-      "ModelTest_Id": selectedTestId,
+      "ModelTest_Id": testId,
       "ModelTest_Date": datepickar4.text.toString(),
-      "Remark_ModelTest": RemarksController.text.toString(),
+      "Remark_ModelTest": "${RemarksController.text.toString()}",
       "Appointment_Date": datepickar5.text,
       "Appointment_Time": "${selectedTime1.hour}:${selectedTime1.minute}",
-      "Remark_Appointment": RemarksController2.text.toString(),
-      "Remark_Special": SplRemarks.text.toString(),
+      "Remark_Appointment": "${RemarksController2.text.toString()}",
+      "Remark_Special": "${SplRemarks.text.toString()}",
       "CurrentAppointmentDate": datepickar5.text,
       "EnquiryStatus": 1,
       "Last_Remark": "jaipur",
       "LastContact_Date": datepickar5.text,
     };
+    // log(message)
+    print("${postData}");
     String jsonString = jsonEncode(postData);
     print(3);
     try {
@@ -1782,13 +2330,33 @@ class _ProsepetScreenState extends State<ProsepetScreen> {
       setState(() {
         print(
             'Latitude: ${position.latitude}, Longitude: ${position.longitude}');
-        latitude:
-        position.latitude;
-        longitude:
-        position.longitude;
       });
     } catch (e) {
       print(e);
     }
   }
+}
+
+Widget dropdownTextfield(
+  String? labelText,
+  Widget? widget,
+) {
+  return SizedBox(
+    height: 50,
+    child: TextFormField(
+      readOnly: true,
+      initialValue: " ",
+      decoration: InputDecoration(
+          suffix: SizedBox(width: double.infinity, child: widget),
+          labelText: labelText,
+          border: OutlineInputBorder(
+              borderSide: BorderSide(color: AppColor.kBlack, width: 2)),
+          enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: AppColor.kBlack, width: 2)),
+          errorBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: AppColor.kBlack, width: 2)),
+          focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: AppColor.kBlack, width: 2))),
+    ),
+  );
 }

@@ -5,9 +5,11 @@ import 'package:autowheelapp/models/manufacturemodel.dart';
 import 'package:autowheelapp/screen/master/Group1.dart';
 import 'package:autowheelapp/screen/master/HsnCategary.dart';
 import 'package:autowheelapp/screen/master/Ledgermaster.dart';
+import 'package:autowheelapp/showroom/Prosepet.dart';
 import 'package:autowheelapp/utils/color/Appcolor.dart';
 import 'package:autowheelapp/utils/widget/String.dart';
 import 'package:autowheelapp/utils/widget/widget.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 // ignore: unnecessary_import
@@ -24,25 +26,34 @@ class PartsMasters extends StatefulWidget {
 class _PartsMastersState extends State<PartsMasters> {
   double h = 0.0;
   double w = 0.0;
-  // int selectedHsnIdScreen = 0;
   var HSN_ID;
 
   String singleoutlate1 = "Single Outlet";
 
   List<Websitmodal> hsnModels = [];
+
+  /// group
   String selectedGroupName = "Select Group";
-  int? selectedGroupId;
+  Map<String, dynamic>? selectedgroupValue;
+  int groupid = 0;
+  final TextEditingController gropuController = TextEditingController();
+  // int? selectedGroupId;
   List<Map<String, dynamic>> drop = [
     {'id': 0, 'name': 'Select Group'}
   ];
+  // group
+
   Map<String, dynamic>? selectedManufacturer;
-  var manufactureValue;
+  // var manufactureValue;
+  List<Map<String, dynamic>> manufacturers = [];
+  Map<String, dynamic>? selectedManufacturerValue;
+  int Manufacturerid = 0;
+  final TextEditingController ManufacturerController = TextEditingController();
 
   double igstValue = 0.0;
   double cgstValue = 0.0;
   double sgstValue = 0.0;
 
-  List<Map<String, dynamic>> manufacturers = [];
   TextEditingController PartNoumbarController = TextEditingController();
   TextEditingController partnamecontroller = TextEditingController();
   TextEditingController IgstController = TextEditingController();
@@ -55,6 +66,7 @@ class _PartsMastersState extends State<PartsMasters> {
   TextEditingController ColoseController = TextEditingController();
   var isshowdata = false;
   bool isrefresh = false;
+
   @override
   void initState() {
     super.initState();
@@ -71,12 +83,8 @@ class _PartsMastersState extends State<PartsMasters> {
 
   @override
   Widget build(BuildContext context) {
-    // PartNoumbarController.text = widget.gst.toString();
-    // MrpController.text = widget.netAmmount.toString();
-
     h = MediaQuery.of(context).size.height.toDouble();
     w = MediaQuery.of(context).size.width.toDouble();
-
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 36,
@@ -103,7 +111,6 @@ class _PartsMastersState extends State<PartsMasters> {
                       textformfiles(
                         PartNoumbarController,
                         labelText: "Part No.*",
-                        // ignore: body_might_complete_normally_nullable
                         validator: (value) {
                           if (value!.isEmpty) {
                             return "please Enter Part No..";
@@ -120,51 +127,125 @@ class _PartsMastersState extends State<PartsMasters> {
                           }
                         },
                       ),
-
                       addVerticalSpace(10),
                       Row(
                         children: [
                           Expanded(
-                              child: Container(
-                            padding: const EdgeInsets.all(8),
-                            height: 50,
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                                border:
-                                    Border.all(color: Colors.black, width: 2),
-                                borderRadius: BorderRadius.circular(5)),
-                            child: DropdownButton(
-                              underline: Container(),
-                              value: selectedGroupName,
-                              dropdownColor:
-                                  const Color.fromARGB(255, 211, 247, 212),
-                              icon: Icon(Icons.keyboard_arrow_down_outlined,
-                                  size: h * 0.030, color: AppColor.kBlack),
-                              isExpanded: true,
-                              items: drop.map((item) {
-                                return DropdownMenuItem(
-                                  value: item['name'],
-                                  child: Text(
-                                    item['name'],
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold),
+                            child: Container(
+                              height: 50,
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                  border:
+                                      Border.all(color: Colors.black, width: 2),
+                                  borderRadius: BorderRadius.circular(5)),
+                              child: DropdownButtonHideUnderline(
+                                child: DropdownButton2<Map<String, dynamic>>(
+                                  isExpanded: true,
+                                  iconStyleData: IconStyleData(
+                                    icon: Icon(
+                                      Icons.keyboard_arrow_down,
+                                      color: AppColor.kBlack,
+                                    ),
                                   ),
-                                );
-                              }).toList(),
-                              onChanged: (value) {
-                                setState(() {
-                                  selectedGroupName = value.toString();
-                                  selectedGroupId = drop
-                                          .firstWhere(
-                                              (item) => item['name'] == value)
-                                          .containsKey('id')
-                                      ? drop.firstWhere(
-                                          (item) => item['name'] == value)['id']
-                                      : null;
-                                });
-                              },
+                                  hint: Text(
+                                    'Select Group',
+                                    style: TextStyle(
+                                        fontSize: 14,
+                                        color: AppColor.kBlack,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  items: drop
+                                      .map((item) => DropdownMenuItem(
+                                            onTap: () {
+                                              groupid = item['id'];
+                                            },
+                                            value: item,
+                                            child: Row(
+                                              children: [
+                                                Text(
+                                                  item['name'].toString(),
+                                                  style: const TextStyle(
+                                                      fontSize: 16,
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
+                                              ],
+                                            ),
+                                          ))
+                                      .toList(),
+                                  value: selectedgroupValue,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      selectedgroupValue = value;
+                                    });
+                                  },
+                                  buttonStyleData: const ButtonStyleData(
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 16),
+                                    height: 20,
+                                    width: 200,
+                                  ),
+                                  dropdownStyleData: const DropdownStyleData(
+                                    maxHeight: 200,
+                                  ),
+                                  menuItemStyleData: const MenuItemStyleData(
+                                    height: 40,
+                                  ),
+                                  dropdownSearchData: DropdownSearchData(
+                                    searchController: gropuController,
+                                    searchInnerWidgetHeight: 50,
+                                    searchInnerWidget: Container(
+                                      height: 50,
+                                      padding: const EdgeInsets.only(
+                                        top: 8,
+                                        bottom: 4,
+                                        right: 8,
+                                        left: 8,
+                                      ),
+                                      child: TextFormField(
+                                        expands: true,
+                                        readOnly: false,
+                                        maxLines: null,
+                                        controller: gropuController,
+                                        onChanged: (value) {
+                                          setState(() {
+                                            // Filter the Prionaity list based on the search value
+                                            drop
+                                                .where((item) => item['name']
+                                                    .toString()
+                                                    .toLowerCase()
+                                                    .contains(
+                                                        value.toLowerCase()))
+                                                .toList();
+                                          });
+                                        },
+                                        decoration: InputDecoration(
+                                          isDense: true,
+                                          contentPadding:
+                                              const EdgeInsets.symmetric(
+                                            horizontal: 10,
+                                            vertical: 8,
+                                          ),
+                                          hintText: 'Search for a Group...',
+                                          hintStyle:
+                                              const TextStyle(fontSize: 12),
+                                          border: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(8),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  onMenuStateChange: (isOpen) {
+                                    if (!isOpen) {
+                                      gropuController.clear();
+                                    }
+                                  },
+                                ),
+                              ),
                             ),
-                          )),
+                          ),
                           addhorizontalSpace(10),
                           SizedBox(
                             width: 50,
@@ -208,45 +289,115 @@ class _PartsMastersState extends State<PartsMasters> {
                         children: [
                           Expanded(
                             child: Container(
-                              padding: const EdgeInsets.all(8),
                               height: 50,
                               width: double.infinity,
                               decoration: BoxDecoration(
-                                border:
-                                    Border.all(color: Colors.black, width: 2),
-                                borderRadius: BorderRadius.circular(5),
-                              ),
-                              child: DropdownButton(
-                                icon: Icon(
-                                  Icons.keyboard_arrow_down_outlined,
-                                  color: AppColor.kBlack,
-                                ),
-                                underline: Container(),
-                                value: selectedManufacturer,
-                                hint: Text(
-                                  "Select Manufacturer.",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: AppColor.kBlack),
-                                ),
-                                isExpanded: true,
-                                items: manufacturers.map((data) {
-                                  return DropdownMenuItem(
-                                    value: data,
-                                    child: Text(
-                                      '${data['id']} - ${data['ledger_Name']}',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold),
+                                  border:
+                                      Border.all(color: Colors.black, width: 2),
+                                  borderRadius: BorderRadius.circular(5)),
+                              child: DropdownButtonHideUnderline(
+                                child: DropdownButton2<Map<String, dynamic>>(
+                                  isExpanded: true,
+                                  underline: Container(),
+                                  iconStyleData: IconStyleData(
+                                    icon: Icon(
+                                      Icons.keyboard_arrow_down,
+                                      color: AppColor.kBlack,
                                     ),
-                                  );
-                                }).toList(),
-                                onChanged: (value) {
-                                  selectedManufacturer =
-                                      // ignore: unnecessary_cast
-                                      value as Map<String, dynamic>?;
-                                  debugPrint("value  ${selectedManufacturer}");
-                                  setState(() {});
-                                },
+                                  ),
+                                  hint: Text(
+                                    'Select manufacturers',
+                                    style: TextStyle(
+                                        fontSize: 14,
+                                        color: AppColor.kBlack,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  items: manufacturers
+                                      .map((item) => DropdownMenuItem(
+                                            onTap: () {
+                                              Manufacturerid = item['id'];
+                                            },
+                                            value: item,
+                                            child: Text(
+                                              item['ledger_Name'].toString(),
+                                              style: const TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                          ))
+                                      .toList(),
+                                  value: selectedManufacturerValue,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      selectedManufacturerValue = value;
+                                    });
+                                  },
+                                  buttonStyleData: const ButtonStyleData(
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 16),
+                                    height: 20,
+                                    width: 200,
+                                  ),
+                                  dropdownStyleData: const DropdownStyleData(
+                                    maxHeight: 200,
+                                  ),
+                                  menuItemStyleData: const MenuItemStyleData(
+                                    height: 40,
+                                  ),
+                                  dropdownSearchData: DropdownSearchData(
+                                    searchController: ManufacturerController,
+                                    searchInnerWidgetHeight: 50,
+                                    searchInnerWidget: Container(
+                                      height: 50,
+                                      padding: const EdgeInsets.only(
+                                        top: 8,
+                                        bottom: 4,
+                                        right: 8,
+                                        left: 8,
+                                      ),
+                                      child: TextFormField(
+                                        expands: true,
+                                        readOnly: false,
+                                        maxLines: null,
+                                        controller: ManufacturerController,
+                                        onChanged: (value) {
+                                          setState(() {
+                                            // Filter the Prionaity list based on the search value
+                                            manufacturers
+                                                .where((item) =>
+                                                    item['ledger_Name']
+                                                        .toString()
+                                                        .toLowerCase()
+                                                        .contains(value
+                                                            .toLowerCase()))
+                                                .toList();
+                                          });
+                                        },
+                                        decoration: InputDecoration(
+                                          isDense: true,
+                                          contentPadding:
+                                              const EdgeInsets.symmetric(
+                                            horizontal: 10,
+                                            vertical: 8,
+                                          ),
+                                          hintText:
+                                              'Search for a Manufacturer...',
+                                          hintStyle:
+                                              const TextStyle(fontSize: 12),
+                                          border: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(8),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  onMenuStateChange: (isOpen) {
+                                    if (!isOpen) {
+                                      ManufacturerController.clear();
+                                    }
+                                  },
+                                ),
                               ),
                             ),
                           ),
@@ -286,29 +437,14 @@ class _PartsMastersState extends State<PartsMasters> {
                       Row(
                         children: [
                           Expanded(
-                            child: Container(
-                              // padding: const EdgeInsets.all(8),
-                              height: 50,
-                              width: double.infinity,
-                              decoration: BoxDecoration(
-                                border:
-                                    Border.all(color: Colors.black, width: 1),
-                                borderRadius: BorderRadius.circular(5),
-                              ),
-                              child: DropdownButtonFormField(
+                            child: dropdownTextfield(
+                              
+                              "Select HSN",
+                              DropdownButtonFormField(
+                              
                                 value: hsnModels.isNotEmpty
                                     ? hsnModels.first.hsnCode
                                     : null,
-                                decoration: InputDecoration(
-                                  border: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          width: 1, color: AppColor.kGray)),
-                                  hintText: 'Select Hsn Code',
-                                  hintStyle:
-                                      TextStyle(fontWeight: FontWeight.bold),
-                                  // labelText: 'Select Hsn Code',
-                                  contentPadding: EdgeInsets.all(5),
-                                ),
                                 dropdownColor:
                                     const Color.fromARGB(255, 211, 247, 212),
                                 icon: Icon(
@@ -319,6 +455,7 @@ class _PartsMastersState extends State<PartsMasters> {
                                 isExpanded: true,
                                 items: hsnModels.map((model) {
                                   return DropdownMenuItem(
+                                  
                                     value: model.hsnCode,
                                     child: Text(model.hsnCode),
                                   );
@@ -368,7 +505,6 @@ class _PartsMastersState extends State<PartsMasters> {
                           )
                         ],
                       ),
-
                       SizedBox(height: 10),
                       Container(
                         width: double.infinity,
@@ -378,8 +514,11 @@ class _PartsMastersState extends State<PartsMasters> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  textfild(igsttext, IgstController,
-                                      TextInputType.number, true, "")
+                                  textformfiles(IgstController,
+                                      keyboardType: TextInputType.number,
+                                      readOnly: true,
+                                      hintText: "0.00",
+                                      labelText: igsttext),
                                 ],
                               ),
                             ),
@@ -388,8 +527,11 @@ class _PartsMastersState extends State<PartsMasters> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  textfild(cgsttxt, CgstController,
-                                      TextInputType.number, true, "")
+                                  textformfiles(CgstController,
+                                      keyboardType: TextInputType.number,
+                                      readOnly: true,
+                                      hintText: "0.00",
+                                      labelText: cgsttxt)
                                 ],
                               ),
                             ),
@@ -398,8 +540,11 @@ class _PartsMastersState extends State<PartsMasters> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  textfild(sgstxt, SgstController,
-                                      TextInputType.number, true, "")
+                                  textformfiles(SgstController,
+                                      keyboardType: TextInputType.number,
+                                      readOnly: true,
+                                      hintText: "0.00",
+                                      labelText: sgstxt)
                                 ],
                               ),
                             ),
@@ -431,9 +576,9 @@ class _PartsMastersState extends State<PartsMasters> {
                                 children: [
                                   textformfiles(
                                     MrpController,
+                                    hintText: "0.00",
                                     labelText: "MRP",
                                     keyboardType: TextInputType.number,
-                                    hintText: "0.00",
                                   )
                                 ],
                               ),
@@ -443,8 +588,12 @@ class _PartsMastersState extends State<PartsMasters> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  textfild(BillNo, BillNoController,
-                                      TextInputType.number, false, "0.00")
+                                  textformfiles(
+                                    BillNoController,
+                                    hintText: "0.00",
+                                    labelText: "Bin No.",
+                                    keyboardType: TextInputType.number,
+                                  )
                                 ],
                               ),
                             ),
@@ -489,7 +638,6 @@ class _PartsMastersState extends State<PartsMasters> {
                           )
                         ],
                       ),
-
                       InkWell(
                           onTap: () {
                             partmasteraDeta();
@@ -497,57 +645,11 @@ class _PartsMastersState extends State<PartsMasters> {
                           child: Button("Save")),
                       addVerticalSpace(10),
                       redButton(delettxt),
-                      // Text(
-                      //   'Selected Group Name: $selectedGroupName',
-                      //   style: TextStyle(fontSize: 18),
-                      // ),
-                      // Text(
-                      //   'Selected Group ID: ${selectedGroupId ?? "Select a Group"}',
-                      //   style: TextStyle(fontSize: 18),
-                      // ),
-                      // Text(
-                      //   'Selected Manufacturer ID: ${selectedManufacturer?['id'] ?? "Select a Manufacturer"}',
-                      //   style: TextStyle(fontSize: 18),
-                      // ),
-                      // Text(
-                      //   'Selected Manufacturer Name: ${selectedManufacturer?['ledger_Name'] ?? "Select a Manufacturer"}',
-                      //   style: TextStyle(fontSize: 18),
-                      // ),
                     ],
                   ),
                 ),
               ),
             ),
-    );
-  }
-
-  TextFormField textfild(String? labelText, TextEditingController? controller,
-      TextInputType? keyboardType, bool readOnly, String? hintText) {
-    return TextFormField(
-      readOnly: readOnly,
-      controller: controller,
-      textCapitalization: TextCapitalization.words,
-      keyboardType: keyboardType,
-      textInputAction: TextInputAction.done,
-      // onChanged: (value) {},
-      decoration: InputDecoration(
-          hintText: hintText,
-          counterText: "",
-          labelText: labelText,
-          labelStyle: TextStyle(fontWeight: FontWeight.bold),
-          contentPadding: EdgeInsets.all(5),
-          enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(width: 2.0, color: Colors.black),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(width: 2.0, color: Colors.black),
-          ),
-          errorBorder: OutlineInputBorder(
-            borderSide: BorderSide(width: 5.0, color: Colors.red),
-          ),
-          border: OutlineInputBorder(
-            borderSide: BorderSide(width: 5),
-          )),
     );
   }
 
@@ -579,9 +681,9 @@ class _PartsMastersState extends State<PartsMasters> {
     final url =
         Uri.parse('http://lms.muepetro.com/api/UserController1/PostItemMaster');
     final Map<String, dynamic> body = {
-      "Item_Name": PartNoumbarController.text.toString(),
+      "Item_Name": "${PartNoumbarController.text.toString()}",
       "Item_Des": '${partnamecontroller.text}',
-      "Group_Id": selectedGroupId ?? 0,
+      "Group_Id": groupid ?? 0,
       "CategoryId": 1,
       "Manufacturer_Id": selectedManufacturer?['id'] ?? 0,
       "Supplier_Id": 1,
@@ -595,21 +697,18 @@ class _PartsMastersState extends State<PartsMasters> {
       "Margin": 0,
       "Opening_Stock": 10,
       "Stock_Qty": 10,
-      "Bin_No": BillNoController.text.toString(),
+      "Bin_No": "${BillNoController.text.toString()}",
       "Sale_Price": 100,
       "Hsn_Id": HSN_ID ?? 0,
       "Hsn_Code": "0",
-      "Igst": IgstController.text.toString(),
-      "Cgst": CgstController.text.toString(),
-      "Sgst": SgstController.text.toString(),
+      "Igst": "${IgstController.text.toString()}",
+      "Cgst": "${CgstController.text.toString()}",
+      "Sgst": "${SgstController.text.toString()}",
       "Cess": "1",
       "AlternPartNo": "",
-      // "Min_Stock": double.parse(OpeningController.text),
       "Min_Stock": OpeningController.text.isNotEmpty
           ? double.parse(OpeningController.text)
           : 0.0,
-
-      // "Min_Stock": OpeningController.text.toString(),
       "Max_Stock": 100,
       "Moq": 5,
       "Roi": 12,
@@ -711,16 +810,6 @@ class _PartsMastersState extends State<PartsMasters> {
       if (response.statusCode == 200) {
         final List<Manufacturemodeldeta> manufacturerList =
             manufacturemodeldetaFromJson(response.body);
-        // for (int i = 0; i <= manufacturerList.length; i++) {
-        //   DemoModal modal = DemoModal();
-        //   modal.id = manufacturerList[i].titleId;
-        //   modal.name = manufacturerList[i].ledgerName;
-        //   manufacturers.add(modal);
-
-        //   // manufacturers.addAll(DemoModal(
-        //   //     id: manufacturerList[i].titleId,
-        //   //     name: manufacturerList[i].titleId));
-        // }
         setState(() {
           manufacturers = manufacturerList
               .map((item) =>

@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-// ignore: unused_import
 import 'package:autowheelapp/screen/master/PurchaseInvoice.dart';
 import 'package:autowheelapp/showroom/FollowUpScreen.dart';
 import 'package:autowheelapp/showroom/id.dart';
@@ -12,15 +11,16 @@ import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:pdf/pdf.dart';
-// ignore: unused_import
 import 'package:pdf/widgets.dart' as pw;
+import 'package:get/get.dart';
 import 'package:autowheelapp/models/Datevisemodel.dart';
 import 'package:autowheelapp/utils/color/Appcolor.dart';
 import 'package:intl/intl.dart';
 
 class Report extends StatefulWidget {
-
-  const Report({Key? key,}) : super(key: key);
+  const Report({
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<Report> createState() => _ReportState();
@@ -30,10 +30,10 @@ class _ReportState extends State<Report> {
   List<dynamic> dateList = [];
 
   TextEditingController datepickar1 = TextEditingController(
-    text: DateFormat('yyyy/MM/dd').format(DateTime.now()),
+    text: DateFormat('yyyy-MM-dd').format(DateTime.now()),
   );
   TextEditingController datepickar2 = TextEditingController(
-    text: DateFormat('yyyy/MM/dd').format(DateTime.now()),
+    text: DateFormat('yyyy-MM-dd').format(DateTime.now()),
   );
   int selectedId3 = 0;
   var loctionid;
@@ -44,9 +44,9 @@ class _ReportState extends State<Report> {
     loction();
   }
 
+
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
         appBar: AppBar(
           actions: [
@@ -71,194 +71,195 @@ class _ReportState extends State<Report> {
           backgroundColor: AppColor.kGreen,
           title: Text('Schedule Report'),
         ),
-        body: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              children: [
-                Container(
-                  padding: EdgeInsets.all(5),
-                  height: 50,
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.black54, width: 2),
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  child: DropdownButton(
-                    underline: Container(),
-                    value: selectedId3,
-                    dropdownColor: const Color.fromARGB(255, 211, 247, 212),
-                    icon: Icon(
-                      Icons.keyboard_arrow_down_outlined,
-                      size: MediaQuery.of(context).size.height * 0.030,
-                      color: Colors.black, // AppColor.kBlack,
+        body: SingleChildScrollView(
+          child: SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                children: [
+                  Container(
+                    padding: EdgeInsets.all(5),
+                    height: 50,
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.black54, width: 2),
+                      borderRadius: BorderRadius.circular(5),
                     ),
-                    isExpanded: true,
-                    items: Loctionshow.map((value) {
-                      return DropdownMenuItem(
-                        value: value['id'],
-                        child: Text(
-                          '${value['id']} -${value['location_Name']}',
-                          style: TextStyle(fontWeight: FontWeight.bold),
+                    child: DropdownButton(
+                      underline: Container(),
+                      value: selectedId3,
+                      dropdownColor: const Color.fromARGB(255, 211, 247, 212),
+                      icon: Icon(
+                        Icons.keyboard_arrow_down_outlined,
+                        size: MediaQuery.of(context).size.height * 0.030,
+                        color: Colors.black, // AppColor.kBlack,
+                      ),
+                      isExpanded: true,
+                      items: Loctionshow.map((value) {
+                        return DropdownMenuItem(
+                          value: value['id'],
+                          child: Text(
+                            '${value['id']} -${value['location_Name']}',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                        );
+                      }).toList(),
+                      onChanged: (value) {
+                        setState(() {
+                          selectedId3 = value as int;
+                          loctionid =
+                              selectedId3; // Assign the selected ID directly
+                        });
+                      },
+                    ),
+                  ),
+                  addVerticalSpace(10),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: TextFormField(
+                          readOnly: true,
+                          controller: datepickar1,
+                          decoration: InputDecoration(
+                            enabledBorder: OutlineInputBorder(
+                              borderSide:
+                                  BorderSide(width: 2.0, color: Colors.black),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide:
+                                  BorderSide(width: 2.0, color: Colors.black),
+                            ),
+                            contentPadding: EdgeInsets.all(5),
+                            hintText: jobouttxt,
+                            prefixIcon: Icon(
+                              Icons.edit_calendar,
+                              color: AppColor.kBlack,
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            // Apply bold font weight to the text
+                            labelText: "From Date",
+                            labelStyle: TextStyle(
+                              fontWeight: FontWeight.bold, // Make the text bold
+                            ),
+                          ),
+                          onTap: () async {
+                            // ignore: unused_local_variable
+                            DateTime date = DateTime(1900);
+                            FocusScope.of(context).requestFocus(FocusNode());
+                            await showDatePicker(
+                              context: context,
+                              initialDate: DateTime.now(),
+                              firstDate: DateTime(1900),
+                              lastDate: DateTime.now(),
+                            ).then((selectedDate) {
+                              if (selectedDate != null) {
+                                datepickar1.text = DateFormat('dd-MM-yyyy')
+                                    .format(selectedDate);
+                              }
+                            });
+                          },
                         ),
-                      );
-                    }).toList(),
-                    onChanged: (value) {
-                      setState(() {
-                        selectedId3 = value as int;
-                        loctionid =
-                            selectedId3; // Assign the selected ID directly
-                      });
+                      ),
+                      addhorizontalSpace(10),
+                      Expanded(
+                        child: TextFormField(
+                          readOnly: true,
+                          controller: datepickar2,
+                          decoration: InputDecoration(
+                            enabledBorder: OutlineInputBorder(
+                              borderSide:
+                                  BorderSide(width: 2.0, color: Colors.black),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide:
+                                  BorderSide(width: 2.0, color: Colors.black),
+                            ),
+                            contentPadding: EdgeInsets.all(5),
+                            hintText: jobouttxt,
+                            prefixIcon: Icon(
+                              Icons.edit_calendar,
+                              color: AppColor.kBlack,
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                           
+                            labelText: "To Date",
+                            labelStyle: TextStyle(
+                              fontWeight: FontWeight.bold, 
+                            ),
+                          ),
+                          onTap: () async {
+                              DateTime date = DateTime(1900);
+                            FocusScope.of(context).requestFocus(FocusNode());
+                            await showDatePicker(
+                              context: context,
+                              initialDate: DateTime.now(),
+                              firstDate: DateTime(1900),
+                              lastDate: DateTime.now(),
+                            ).then((selectedDate) {
+                              if (selectedDate != null) {
+                                datepickar2.text = DateFormat('yyyy-MM-dd')
+                                    .format(selectedDate);
+                              }
+                            });
+                          },
+                        ),
+                      )
+                    ],
+                  ),
+                  addVerticalSpace(10),
+                  GestureDetector(
+                    onTap: () {
+                      if (loctionid == null) {
+                        Get.snackbar('Error', 'Please select a location.',
+                            backgroundColor: AppColor.kGreen);
+                      } else {
+                        dateViseDeta(
+                          dateFrom: datepickar1.text,
+                          dateTo: datepickar2.text,
+                          locationId: loctionid,
+                        );
+                      }
                     },
+                    child: Button("Get Data"),
                   ),
-                ),
-                addVerticalSpace(10),
-                Row(
-                  children: [
-                    Expanded(
-                      child: TextFormField(
-                        readOnly: true,
-                        controller: datepickar1,
-                        decoration: InputDecoration(
-                          enabledBorder: OutlineInputBorder(
-                            borderSide:
-                                BorderSide(width: 2.0, color: Colors.black),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide:
-                                BorderSide(width: 2.0, color: Colors.black),
-                          ),
-                          contentPadding: EdgeInsets.all(5),
-                          hintText: jobouttxt,
-                          prefixIcon: Icon(
-                            Icons.edit_calendar,
-                            color: AppColor.kBlack,
-                          ),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                          // Apply bold font weight to the text
-                          labelText: "From Date",
-                          labelStyle: TextStyle(
-                            fontWeight: FontWeight.bold, // Make the text bold
+                  addVerticalSpace(10),
+                  ListView.builder(
+                    physics: BouncingScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: dateList.length,
+                    itemBuilder: (context, index) {
+                      return Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: InkWell(
+                          onDoubleTap: () {
+                            Get.to(FollowUpScreen(
+                              refnom: "${dateList[index]?["ref_No"]}",
+                            ));
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: AppColor.kWhite,
+                              boxShadow: [
+                                BoxShadow(blurRadius: 2, color: AppColor.kGray)
+                              ],
+                            ),
+                            child: ListTile(
+                              title: Text(
+                                  'Customer Name: ${dateList[index]?["customer_Name"] ?? 'N/A'}'),
+                              subtitle: Text(
+                                  'Sales Person: ${dateList[index]?["salesPerson"] ?? 'N/A'}\nproduct: ${dateList[index]?["product"] ?? 'N/A'}\nrefno.: ${dateList[index]?["ref_No"] ?? 'N/A'}\nmobile.: ${dateList[index]?["mob_No"] ?? 'N/A'} '),
+                            ),
                           ),
                         ),
-                        onTap: () async {
-                          // ignore: unused_local_variable
-                          DateTime date = DateTime(1900);
-                          FocusScope.of(context).requestFocus(FocusNode());
-                          await showDatePicker(
-                            context: context,
-                            initialDate: DateTime.now(),
-                            firstDate: DateTime(1900),
-                            lastDate: DateTime.now(),
-                          ).then((selectedDate) {
-                            if (selectedDate != null) {
-                              datepickar1.text =
-                                  DateFormat('dd-MM-yyyy').format(selectedDate);
-                            }
-                          });
-                        },
-                      ),
-                    ),
-                    addhorizontalSpace(10),
-                    Expanded(
-                      child: TextFormField(
-                        readOnly: true,
-                        controller: datepickar2,
-                        decoration: InputDecoration(
-                          enabledBorder: OutlineInputBorder(
-                            borderSide:
-                                BorderSide(width: 2.0, color: Colors.black),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide:
-                                BorderSide(width: 2.0, color: Colors.black),
-                          ),
-                          contentPadding: EdgeInsets.all(5),
-                          hintText: jobouttxt,
-                          prefixIcon: Icon(
-                            Icons.edit_calendar,
-                            color: AppColor.kBlack,
-                          ),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                          // Apply bold font weight to the text
-                          labelText: "To Date",
-                          labelStyle: TextStyle(
-                            fontWeight: FontWeight.bold, // Make the text bold
-                          ),
-                        ),
-                        onTap: () async {
-                          // ignore: unused_local_variable
-                          DateTime date = DateTime(1900);
-                          FocusScope.of(context).requestFocus(FocusNode());
-                          await showDatePicker(
-                            context: context,
-                            initialDate: DateTime.now(),
-                            firstDate: DateTime(1900),
-                            lastDate: DateTime.now(),
-                          ).then((selectedDate) {
-                            if (selectedDate != null) {
-                              datepickar2.text =
-                                  DateFormat('yyyy-MM-dd').format(selectedDate);
-                            }
-                          });
-                        },
-                      ),
-                    )
-                  ],
-                ),
-                addVerticalSpace(10),
-                GestureDetector(
-                  onTap: () {
-                    if (loctionid == null) {
-                      Get.snackbar('Error', 'Please select a location.',
-                          backgroundColor: AppColor.kGreen);
-                     
-                    } else {
-                      dateViseDeta(
-                        dateFrom: datepickar1.text,
-                        dateTo: datepickar2.text,
-                        locationId: loctionid,
                       );
-                    }
-                  },
-                  child: Button("Get Data"),
-                ),
-                // GestureDetector(
-               
-                addVerticalSpace(10),
-                ListView.builder(
-                  physics: BouncingScrollPhysics(),
-                  shrinkWrap: true,
-                  itemCount: dateList.length,
-                  itemBuilder: (context, index) {
-                    return Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: InkWell(
-                        onDoubleTap: () {
-                          Get.to(FollowUpScreen(refnom: "${dateList[index]?["ref_No"]}",));
-                        },
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: AppColor.kWhite,
-                            boxShadow: [
-                              BoxShadow(blurRadius: 2, color: AppColor.kGray)
-                            ],
-                          ),
-                          child: ListTile(
-                            title: Text(
-                                'Customer Name: ${dateList[index]?["customer_Name"] ?? 'N/A'}'),
-                            subtitle: Text(
-                                'Sales Person: ${dateList[index]?["salesPerson"] ?? 'N/A'}\nproduct: ${dateList[index]?["product"] ?? 'N/A'}\nrefno.: ${dateList[index]?["ref_No"] ?? 'N/A'}\nmobile.: ${dateList[index]?["mob_No"] ?? 'N/A'} '),
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                )
-              ],
+                    },
+                  )
+                
+                ],
+              ),
             ),
           ),
         ));
