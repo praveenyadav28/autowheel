@@ -839,7 +839,7 @@ class _FollowUpScreenState extends State<FollowUpScreen> {
   String selectedFolowtypeName = "Follow type*";
   // int? selectedFolowtypeId;
   Map<String, dynamic>? selectedfollowupValue;
-  int followupid = 0;
+  int? followupid;
   final TextEditingController FollowupController = TextEditingController();
   // int? selectedPrionaityId;
   //
@@ -924,6 +924,34 @@ class _FollowUpScreenState extends State<FollowUpScreen> {
       refreshData();
     });
     RefController.text = widget.refnom == null ? "" : widget.refnom.toString();
+    Prionaity.clear();
+    Prionaity.add({'id': 0, 'name': 'Prionaity'});
+    prionaityDeta().then((_) {
+      setState(() {
+        selectedValue = Prionaity.firstWhere(
+          (item) => item['id'] == selectedPrionaityId,
+          orElse: () => Prionaity[0],
+        );
+      });
+    });
+    //   Folowtype.clear();
+    //   Folowtype.add({'id': 0, 'name': 'Follow type*'});
+    //   followtypeDeta().then((_) {
+    //     setState(() {
+    //       selectedfollowupValue = Folowtype.firstWhere(
+    //         (item) => item['id'] == selectedPrionaityId,
+    //         orElse: () => Folowtype[0],
+    //       );
+    //     });
+    //   });
+  }
+
+  @override
+  void dispose() {
+    splController.clear();
+    RemarksController.clear();
+
+    super.dispose();
   }
 
   @override
@@ -971,9 +999,9 @@ class _FollowUpScreenState extends State<FollowUpScreen> {
                           child: textformfiles(RefController,
                               keyboardType: TextInputType.number,
                               onChanged: (e) {
-                            // setState(() {
-                            //   PrefixData();
-                            // });
+                            setState(() {
+                              PrefixData();
+                            });
                           }, hintText: "Ref.NO", labelText: "Ref.No"),
                         ),
                         addhorizontalSpace(10),
@@ -1087,49 +1115,6 @@ class _FollowUpScreenState extends State<FollowUpScreen> {
                               ),
                             ),
                           ),
-                          //  Container(
-                          //   padding: EdgeInsets.all(5),
-                          //   height: 50,
-                          //   width: double.infinity,
-                          //   decoration: BoxDecoration(
-                          //     border: Border.all(color: Colors.black, width: 2),
-                          //     borderRadius: BorderRadius.circular(5),
-                          //   ),
-                          //   child: DropdownButton(
-                          //     underline: Container(),
-                          //     value: selectedVisitorName,
-                          //     dropdownColor:
-                          //         const Color.fromARGB(255, 211, 247, 212),
-                          //     icon: Icon(
-                          //       Icons.keyboard_arrow_down_outlined,
-                          //       size: h * 0.030,
-                          //       color: Colors.black,
-                          //     ),
-                          //     isExpanded: true,
-                          //     items: dateList.map((item) {
-                          //       return DropdownMenuItem(
-                          //         value: item['customer_Name'],
-                          //         child: Text(
-                          //           item['customer_Name'],
-                          //           style:
-                          //               TextStyle(fontWeight: FontWeight.bold),
-                          //         ),
-                          //       );
-                          //     }).toList(),
-                          //     onChanged: (value) {
-                          //       setState(() {
-                          //         selectedVisitorName =
-                          //             value?.toString() ?? "Visitor Name";
-                          //         selectedVisitorId = dateList.firstWhere(
-                          //           (item) => item['customer_Name'] == value,
-                          //           orElse: () => {
-                          //             'id': ['prospectId']
-                          //           },
-                          //         )['id'];
-                          //       });
-                          //     },
-                          //   ),
-                          // ),
                         ),
                       ],
                     ),
@@ -1679,9 +1664,9 @@ class _FollowUpScreenState extends State<FollowUpScreen> {
       "Appointment_Date": datepickar2.text.toString(),
       "Appointment_Time": "${selectedTime1.hour}:${selectedTime1.minute}",
       "Remarks": RemarksController.text.toString(),
+      "Remark_Special": splController.text.toString(),
       "ActionTaken": "ActionTaken",
       "Priority": selectedPrionaityId,
-      "Remark_Special": splController.text.toString(),
       "EnquiryStatus": 1,
       "Reason": "Reason",
       "VehiclePurchase": "VehiclePurchase"
@@ -1745,17 +1730,34 @@ class _FollowUpScreenState extends State<FollowUpScreen> {
         if (dataList.isNotEmpty) {
           Map<String, dynamic> data = dataList[0];
 
-          setState(() {});
-          dataList1.add(data);
-          ContactController.text = data['customer_Name'] ?? '';
-          RemarksController.text = data['remarks'] ?? '';
-          splController.text = data['Remark_Special'] ?? '';
-          // selectedFolowtypeId = data['follow_Type'];
-          // print(selectedFolowtypeId);
+          setState(() {
+            ContactController.text = data['customer_Name'] ?? '';
+            RemarksController.text = data['remarks'] ?? '';
+            splController.text = data['remark_Special'] ?? '';
+            selectedPrionaityId = data['priority'];
+            followupid = data['follow_Type'];
+            selectedValue = Prionaity.firstWhere(
+              (item) => item['id'] == selectedPrionaityId,
+              orElse: () => Prionaity[0],
+            );
+            selectedfollowupValue = Folowtype.firstWhere(
+              (item) => item['id'] == followupid,
+              orElse: () => Folowtype[0],
+            );
+            selectedvixiterValue = dateList.firstWhere(
+              (item) => item['id'] == selectedVisitorId,
+              orElse: () => dateList[0],
+            );
 
-          print(3);
-          setState(() {});
+            print(selectedPrionaityId);
+            print(3);
+          });
         } else {
+          ContactController.clear();
+          RemarksController.clear();
+          splController.clear();
+          
+
           print("Empty data list");
         }
       } else {
@@ -1766,4 +1768,42 @@ class _FollowUpScreenState extends State<FollowUpScreen> {
       print('Error: $error');
     }
   }
+
+  // Future<void> PrefixData() async {
+  //   print(1);
+  //   try {
+  //     final response = await http.get(
+  //       Uri.parse(
+  //         'http://lms.muepetro.com/api/UserController1/GetFollowUpData?prefix=Online&refno=${RefController.text}&locationid=2',
+  //       ),
+  //     );
+  //     print(2);
+
+  //     if (response.statusCode == 200) {
+  //       List<dynamic> dataList = json.decode(response.body);
+
+  //       if (dataList.isNotEmpty) {
+  //         Map<String, dynamic> data = dataList[0];
+
+  //         setState(() {});
+  //         dataList1.add(data);
+  //         ContactController.text = data['customer_Name'] ?? '';
+  //         RemarksController.text = data['remarks'] ?? '';
+  //         splController.text = data['Remark_Special'] ?? '';
+  //         followupid = data['follow_Type'];
+  //         print(followupid);
+
+  //         print(3);
+  //         setState(() {});
+  //       } else {
+  //         print("Empty data list");
+  //       }
+  //     } else {
+  //       throw Exception('Failed to load data');
+  //     }
+  //     print(4);
+  //   } catch (error) {
+  //     print('Error: $error');
+  //   }
+  // }
 }

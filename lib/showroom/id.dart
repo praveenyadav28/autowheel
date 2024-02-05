@@ -863,7 +863,6 @@
 //           splController.text = data['Remark_Special'] ?? '';
 //           // selectedFolowtypeId = data['follow_Type'];
 //           // print(selectedFolowtypeId);
-
 //           print(3);
 //           setState(() {});
 //         } else {
