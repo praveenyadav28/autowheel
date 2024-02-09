@@ -1,10 +1,8 @@
 import 'package:autowheelapp/utils/widget/widget.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-// ignore: unused_import
 import 'package:autowheelapp/screen/Intro/HomePage.dart';
 import 'package:autowheelapp/screen/Intro/Trialversion.dart';
-// ignore: unused_import
 import 'package:autowheelapp/screen/Intro/autowheel.dart';
 import 'package:autowheelapp/utils/image/image.dart';
 
@@ -17,7 +15,6 @@ class ConfirmpasswordScreen extends StatefulWidget {
   @override
   State<ConfirmpasswordScreen> createState() => _ConfirmpasswordScreenState();
 }
-
 class _ConfirmpasswordScreenState extends State<ConfirmpasswordScreen> {
   TextEditingController passwordController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
@@ -153,76 +150,3 @@ class _ConfirmpasswordScreenState extends State<ConfirmpasswordScreen> {
 
 
 
-
-
-   // textformfiles(
-                  //   confirmPasswordController,
-                  //   labelText: 'Confirm Password',
-                  //   hintText: 'Re-enter your password',
-                  //   obscureText: visible,
-                  //   validator: (value) {
-                  //     validator:
-                  //     (value) {
-                  //       if (value != confirmPasswordController.text) {
-                  //         return 'Passwords do not match';
-                  //       }
-                  //       return null;
-                  //     };
-                  //   },
-                  //   //   if (value!.isEmpty) {
-                  //   //     return 'Please enter a password';
-                  //   //   } else if (value.length != 6) {
-                  //   //     return 'Phone password must be 6 digits';
-                  //   //   }
-                  //   //   return null;
-                  //   // },
-                  //   prefixIcon: Icon(
-                  //     Icons.password,
-                  //   ),
-                  //   suffixIcon: IconButton(
-                  //     icon: Icon(
-                  //       visible ? Icons.visibility : Icons.visibility_off,
-                  //     ),
-                  //     onPressed: () {
-                  //       setState(() {
-                  //         visible = !visible;
-                  //       });
-                  //     },
-                  //   ),
-                  // ),
-                  // addVerticalSpace(20),
-                  // textformfiles(
-                  //   passwordController,
-                  //   labelText: 'Password',
-                  //   hintText: 'Enter your password',
-                  //   obscureText: obscurePassword,
-                  //   validator: (value) {
-                  //     validator:
-                  //     (value) {
-                  //       if (value != confirmPasswordController.text) {
-                  //         return 'Passwords do not match';
-                  //       }
-                  //       return null;
-                  //     };
-
-                  //     // if (value != passwordController.text) {
-                  //     //   return 'Passwords do not match';
-                  //     // }
-                  //     // return null;
-                  //   },
-                  //   prefixIcon: Icon(
-                  //     Icons.password,
-                  //   ),
-                  //   suffixIcon: IconButton(
-                  //     icon: Icon(
-                  //       obscurePassword
-                  //           ? Icons.visibility
-                  //           : Icons.visibility_off,
-                  //     ),
-                  //     onPressed: () {
-                  //       setState(() {
-                  //         obscurePassword = !obscurePassword;
-                  //       });
-                  //     },
-                  //   ),
-                  // ),

@@ -3,7 +3,6 @@
 import 'package:autowheelapp/screen/Intro/Business1Screen.dart';
 import 'package:autowheelapp/utils/color/Appcolor.dart';
 import 'package:autowheelapp/utils/image/image.dart';
-
 import 'package:autowheelapp/utils/widget/widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

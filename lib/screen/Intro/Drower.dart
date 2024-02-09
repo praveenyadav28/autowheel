@@ -10,7 +10,6 @@ import 'package:autowheelapp/screen/master/PurchaseInvoice.dart';
 import 'package:autowheelapp/screen/master/Searvicemaster.dart';
 import 'package:autowheelapp/showroom/FollowUpScreen.dart';
 import 'package:autowheelapp/showroom/Prosepet.dart';
-import 'package:autowheelapp/showroom/id.dart';
 import 'package:autowheelapp/utils/color/Appcolor.dart';
 import 'package:autowheelapp/utils/widget/widget.dart';
 import 'package:flutter/material.dart';
@@ -46,18 +45,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
     print('Error picking image: $e');
   }
 }
-  // Future getFromGallery() async {
-  //   PickedFile? pickedFile = await ImagePicker().getImage(
-  //     source: ImageSource.gallery,
-  //     maxWidth: 1800,
-  //     maxHeight: 1800,
-  //   );
-  //   if (pickedFile != null) {
-  //     setState(() {
-  //       imageFile = File(pickedFile.path);
-  //     });
-  //   }
-  // }
+
 
   @override
   Widget build(BuildContext context) {

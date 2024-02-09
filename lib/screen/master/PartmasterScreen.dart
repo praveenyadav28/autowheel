@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:autowheelapp/labour/AddLabour.dart';
 import 'package:autowheelapp/models/groupmodel.dart';
 import 'package:autowheelapp/models/hsnmodel.dart';
 import 'package:autowheelapp/models/manufacturemodel.dart';
@@ -26,11 +27,6 @@ class PartsMasters extends StatefulWidget {
 class _PartsMastersState extends State<PartsMasters> {
   double h = 0.0;
   double w = 0.0;
-  var HSN_ID;
-
-  String singleoutlate1 = "Single Outlet";
-
-  List<Websitmodal> hsnModels = [];
 
   /// group
   String selectedGroupName = "Select Group";
@@ -43,8 +39,14 @@ class _PartsMastersState extends State<PartsMasters> {
   ];
   // group
 
-  Map<String, dynamic>? selectedManufacturer;
+  Map<String, dynamic>? singleoutlate1;
   // var manufactureValue;
+  List<Map<String, dynamic>> hsnModels = [];
+  Map<String, dynamic>? singleoutlatevalue;
+  int hsnId = 0;
+  final TextEditingController hsnController = TextEditingController();
+
+  Map<String, dynamic>? selectedManufacturer;
   List<Map<String, dynamic>> manufacturers = [];
   Map<String, dynamic>? selectedManufacturerValue;
   int Manufacturerid = 0;
@@ -64,6 +66,8 @@ class _PartsMastersState extends State<PartsMasters> {
   TextEditingController BillNoController = TextEditingController();
   TextEditingController OpeningController = TextEditingController();
   TextEditingController ColoseController = TextEditingController();
+  TextEditingController marginController = TextEditingController();
+  TextEditingController AmountController = TextEditingController();
   var isshowdata = false;
   bool isrefresh = false;
 
@@ -150,7 +154,7 @@ class _PartsMastersState extends State<PartsMasters> {
                                   hint: Text(
                                     'Select Group',
                                     style: TextStyle(
-                                        fontSize: 14,
+                                        fontSize: 15,
                                         color: AppColor.kBlack,
                                         fontWeight: FontWeight.bold),
                                   ),
@@ -226,7 +230,8 @@ class _PartsMastersState extends State<PartsMasters> {
                                             horizontal: 10,
                                             vertical: 8,
                                           ),
-                                          hintText: 'Search for a Group...',
+                                          hintText:
+                                              'Search for a Manufacture...',
                                           hintStyle:
                                               const TextStyle(fontSize: 12),
                                           border: OutlineInputBorder(
@@ -255,7 +260,7 @@ class _PartsMastersState extends State<PartsMasters> {
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) => Group1Screen(
-                                              SourecID: 1,
+                                              SourecID: modal().group,
                                             ))).then((value) => refreshData());
 
                                 if (refreshResult == "refresh") {
@@ -308,7 +313,7 @@ class _PartsMastersState extends State<PartsMasters> {
                                   hint: Text(
                                     'Select manufacturers',
                                     style: TextStyle(
-                                        fontSize: 14,
+                                        fontSize: 15,
                                         color: AppColor.kBlack,
                                         fontWeight: FontWeight.bold),
                                   ),
@@ -362,7 +367,6 @@ class _PartsMastersState extends State<PartsMasters> {
                                         controller: ManufacturerController,
                                         onChanged: (value) {
                                           setState(() {
-                                            // Filter the Prionaity list based on the search value
                                             manufacturers
                                                 .where((item) =>
                                                     item['ledger_Name']
@@ -438,47 +442,174 @@ class _PartsMastersState extends State<PartsMasters> {
                         children: [
                           Expanded(
                             child: dropdownTextfield(
-                              
                               "Select HSN",
-                              DropdownButtonFormField(
-                              
-                                value: hsnModels.isNotEmpty
-                                    ? hsnModels.first.hsnCode
-                                    : null,
-                                dropdownColor:
-                                    const Color.fromARGB(255, 211, 247, 212),
-                                icon: Icon(
-                                  Icons.keyboard_arrow_down_outlined,
-                                  size: h * 0.030,
-                                  color: Colors.black,
-                                ),
-                                isExpanded: true,
-                                items: hsnModels.map((model) {
-                                  return DropdownMenuItem(
-                                  
-                                    value: model.hsnCode,
-                                    child: Text(model.hsnCode),
-                                  );
-                                }).toList(),
-                                onChanged: (value) {
-                                  singleoutlate1 = value.toString();
-                                  Websitmodal selectedModel =
-                                      hsnModels.firstWhere(
-                                          (model) => model.hsnCode == value);
-                                  HSN_ID = selectedModel.hsnId;
-                                  print('Selected HSN ID: $HSN_ID');
-                                  IgstController.text =
-                                      selectedModel.igst.toString();
-                                  CgstController.text =
-                                      selectedModel.cgst.toString();
-                                  SgstController.text =
-                                      selectedModel.sgst.toString();
+                              DropdownButtonHideUnderline(
+                                child: DropdownButton2<Map<String, dynamic>>(
+                                  isExpanded: true,
+                                  underline: Container(),
+                                  iconStyleData: IconStyleData(
+                                    icon: Icon(
+                                      Icons.keyboard_arrow_down,
+                                      color: AppColor.kBlack,
+                                    ),
+                                  ),
+                                  hint: Text(
+                                    'Select HSN',
+                                    style: TextStyle(
+                                        fontSize: 15,
+                                        color: AppColor.kBlack,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  items: hsnModels
+                                      .map((item) => DropdownMenuItem(
+                                            onTap: () {
+                                              hsnId = item['hsn_Id'];
+                                            },
+                                            value: item,
+                                            child: Text(
+                                              item['hsn_Code'].toString(),
+                                              style: const TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                          ))
+                                      .toList(),
+                                  value: singleoutlatevalue,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      singleoutlatevalue = value;
+                                    });
+                                  },
+                                  buttonStyleData: const ButtonStyleData(
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 16),
+                                    height: 20,
+                                    width: 200,
+                                  ),
+                                  dropdownStyleData: const DropdownStyleData(
+                                    maxHeight: 200,
+                                  ),
+                                  menuItemStyleData: const MenuItemStyleData(
+                                    height: 40,
+                                  ),
+                                  dropdownSearchData: DropdownSearchData(
+                                    searchController: hsnController,
+                                    searchInnerWidgetHeight: 50,
+                                    searchInnerWidget: Container(
+                                      height: 50,
+                                      padding: const EdgeInsets.only(
+                                        top: 8,
+                                        bottom: 4,
+                                        right: 8,
+                                        left: 8,
+                                      ),
+                                      child: TextFormField(
+                                        expands: true,
+                                        readOnly: false,
+                                        maxLines: null,
+                                        controller: hsnController,
+                                        onChanged: (value) {
+                                          setState(() {
+                                            hsnModels
+                                                .where((item) =>
+                                                    item['ledger_Name']
+                                                        .toString()
+                                                        .toLowerCase()
+                                                        .contains(value
+                                                            .toLowerCase()))
+                                                .toList();
+                                  //                   IgstController.text =
+                                  //     selectedModel.igst.toString();
+                                  // CgstController.text =
+                                  //     selectedModel.cgst.toString();
+                                  // SgstController.text =
+                                  //     selectedModel.sgst.toString();
 
-                                  setState(() {});
-                                },
+                                          });
+                                        },
+                                        decoration: InputDecoration(
+                                          isDense: true,
+                                          contentPadding:
+                                              const EdgeInsets.symmetric(
+                                            horizontal: 10,
+                                            vertical: 8,
+                                          ),
+                                          hintText: 'Search for a HSN...',
+                                          hintStyle:
+                                              const TextStyle(fontSize: 12),
+                                          border: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(8),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  onMenuStateChange: (isOpen) {
+                                    if (!isOpen) {
+                                      hsnController.clear();
+                                    }
+                                  },
+                                ),
                               ),
                             ),
                           ),
+
+                          // Expanded(
+                          //   child: dropdownTextfield(
+                          //     "Select HSN",
+                          //     DropdownButtonFormField(
+                          //       decoration: InputDecoration(
+                          //         border: UnderlineInputBorder(
+                          //             borderSide: BorderSide(
+                          //                 color: Colors.transparent)),
+                          //         focusedBorder: UnderlineInputBorder(
+                          //             borderSide: BorderSide(
+                          //                 color: Colors.transparent)),
+                          //         enabledBorder: UnderlineInputBorder(
+                          //             borderSide: BorderSide(
+                          //                 color: Colors.transparent)),
+                          //         errorBorder: UnderlineInputBorder(
+                          //             borderSide: BorderSide(
+                          //                 color: Colors.transparent)),
+                          //       ),
+                          //       value: hsnModels.isNotEmpty
+                          //           ? hsnModels.first.hsnCode
+                          //           : null,
+                          //       dropdownColor:
+                          //           const Color.fromARGB(255, 211, 247, 212),
+                          //       icon: Icon(
+                          //         Icons.keyboard_arrow_down_outlined,
+                          //         size: h * 0.030,
+                          //         color: Colors.black,
+                          //       ),
+                          //       isExpanded: true,
+                          //       items: hsnModels.map((model) {
+                          //         return DropdownMenuItem(
+                          //           value: model.hsnCode,
+                          //           child: Text(model.hsnCode),
+                          //         );
+                          //       }).toList(),
+                          //       onChanged: (value) {
+                          //         singleoutlate1 = value.toString();
+                          //         Websitmodal selectedModel =
+                          //             hsnModels.firstWhere(
+                          //                 (model) => model.hsnCode == value);
+                          //         HSN_ID = selectedModel.hsnId;
+                          //         print('Selected HSN ID: $HSN_ID');
+                                  // IgstController.text =
+                                  //     selectedModel.igst.toString();
+                                  // CgstController.text =
+                                  //     selectedModel.cgst.toString();
+                                  // SgstController.text =
+                                  //     selectedModel.sgst.toString();
+
+                          //         setState(() {});
+                          //       },
+                          //     ),
+                          //   ),
+                          // ),
+
                           addhorizontalSpace(10),
                           SizedBox(
                             width: 50,
@@ -604,6 +735,24 @@ class _PartsMastersState extends State<PartsMasters> {
                       Row(
                         children: [
                           Expanded(
+                              child: textformfiles(marginController,
+                                  hintText: "Margin",
+                                  labelText: "Margin",
+                                  keyboardType: TextInputType.number)),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          Expanded(
+                              child: textformfiles(AmountController,
+                                  hintText: "Amount",
+                                  labelText: "Amount",
+                                  keyboardType: TextInputType.number))
+                        ],
+                      ),
+                      addVerticalSpace(10),
+                      Row(
+                        children: [
+                          Expanded(
                               child: textformfiles(OpeningController,
                                   hintText: "Opening Stock",
                                   labelText: "Opening Stock",
@@ -654,27 +803,49 @@ class _PartsMastersState extends State<PartsMasters> {
   }
 
   Future<void> HsnIdScreenapi() async {
-    print(1);
+    final url =
+        Uri.parse('http://lms.muepetro.com/api/UserController1/GetHSNMaster');
     try {
-      final response = await http.get(Uri.parse(
-          'http://lms.muepetro.com/api/UserController1/GetHSNMaster'));
-      print(2);
+      final response = await http.get(url);
       if (response.statusCode == 200) {
-        final jsonData = json.decode(response.body);
+        final List<Websitmodal> selecthsnList =
+            websitmodalFromJson(response.body);
         setState(() {
-          hsnModels = (jsonData as List)
-              .map((data) => Websitmodal.fromJson(data))
+          hsnModels = selecthsnList
+              .map((item) => {'hsn_Id': item.hsnId, 'hsn_Code': item.hsnCode})
               .toList();
-          print(3);
         });
       } else {
-        print('Failed to load data: ${response.statusCode}');
+        print('Request failed with status: ${response.statusCode}');
+        print('Response Data: ${response.body}');
       }
-      print(4);
     } catch (e) {
       print('Error: $e');
     }
   }
+
+  // Future<void> HsnIdScreenapi() async {
+  //   print(1);
+  //   try {
+  //     final response = await http.get(Uri.parse(
+  //         'http://lms.muepetro.com/api/UserController1/GetHSNMaster'));
+  //     print(2);
+  //     if (response.statusCode == 200) {
+  //       final jsonData = json.decode(response.body);
+  //       setState(() {
+  //         hsnModels = (jsonData as List)
+  //             .map((data) => Websitmodal.fromJson(data))
+  //             .toList();
+  //         print(3);
+  //       });
+  //     } else {
+  //       print('Failed to load data: ${response.statusCode}');
+  //     }
+  //     print(4);
+  //   } catch (e) {
+  //     print('Error: $e');
+  //   }
+  // }
 
   Future<void> partmasteraDeta() async {
     print('1');
@@ -699,7 +870,7 @@ class _PartsMastersState extends State<PartsMasters> {
       "Stock_Qty": 10,
       "Bin_No": "${BillNoController.text.toString()}",
       "Sale_Price": 100,
-      "Hsn_Id": HSN_ID ?? 0,
+      "Hsn_Id": hsnId ?? 0,
       "Hsn_Code": "0",
       "Igst": "${IgstController.text.toString()}",
       "Cgst": "${CgstController.text.toString()}",
@@ -780,7 +951,7 @@ class _PartsMastersState extends State<PartsMasters> {
 
   Future<void> groupData() async {
     final url = Uri.parse(
-        'http://lms.muepetro.com/api/UserController1/GetMiscMaster?MiscTypeId=1');
+        'http://lms.muepetro.com/api/UserController1/GetMiscMaster?MiscTypeId=${modal().group}');
     try {
       final response = await http.get(url);
       if (response.statusCode == 200) {
@@ -804,7 +975,7 @@ class _PartsMastersState extends State<PartsMasters> {
 
   Future<void> manufutureurData() async {
     final url = Uri.parse(
-        'http://lms.muepetro.com/api/UserController1/GetLedger?LedgerGroupId=9');
+        'http://lms.muepetro.com/api/UserController1/GetLedger?LedgerGroupId=${modal().ledger_group}');
     try {
       final response = await http.get(url);
       if (response.statusCode == 200) {

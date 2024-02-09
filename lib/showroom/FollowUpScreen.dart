@@ -773,7 +773,7 @@
 //   // }
 // }
 
-// ignore_for_file: unused_import
+// ignore_for_file: unused_import, unnecessary_import
 import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
@@ -784,7 +784,6 @@ import 'package:autowheelapp/models/groupmodel.dart';
 import 'package:autowheelapp/screen/master/Group1.dart';
 import 'package:autowheelapp/showroom/Datevisedeta.dart';
 import 'package:autowheelapp/showroom/Prosepet.dart';
-import 'package:autowheelapp/showroom/id.dart';
 import 'package:autowheelapp/utils/widget/String.dart';
 import 'package:autowheelapp/utils/widget/widget.dart';
 import 'package:flutter/material.dart';
@@ -828,7 +827,7 @@ class _FollowUpScreenState extends State<FollowUpScreen> {
   List<Map<String, dynamic>> Prionaity = [
     {'id': 0, 'name': 'Prionaity'}
   ];
-  Map<String, dynamic>? selectedValue;
+  Map<String, dynamic>? selectedValue1;
   // int proirityId = 0;
   final TextEditingController textEditingController = TextEditingController();
   int? selectedPrionaityId;
@@ -854,22 +853,7 @@ class _FollowUpScreenState extends State<FollowUpScreen> {
   List<Map<String, String>> dataList = [];
   @override
 
-  // void updateTableValues() {
-  //   setState(() {
-  //     conttact = ContactController.text;
-  //     remark = RemarksController.text;
-  //     page = datepickar.text;
-  //          Map<String, String> newData = {
-  //       'Name': conttact,
-  //       'Age': remark,
-  //       'Page': page,
-  //       'time': time
-  //     };
-  //     dataList.add(newData);
-  //   });
-  // }
-
-  Future<void> _selectTime1(BuildContext context) async {
+    Future<void> _selectTime1(BuildContext context) async {
     final TimeOfDay? picked = await showTimePicker(
       context: context,
       initialTime: selectedTime1,
@@ -928,22 +912,12 @@ class _FollowUpScreenState extends State<FollowUpScreen> {
     Prionaity.add({'id': 0, 'name': 'Prionaity'});
     prionaityDeta().then((_) {
       setState(() {
-        selectedValue = Prionaity.firstWhere(
+        selectedValue1 = Prionaity.firstWhere(
           (item) => item['id'] == selectedPrionaityId,
           orElse: () => Prionaity[0],
         );
       });
     });
-    //   Folowtype.clear();
-    //   Folowtype.add({'id': 0, 'name': 'Follow type*'});
-    //   followtypeDeta().then((_) {
-    //     setState(() {
-    //       selectedfollowupValue = Folowtype.firstWhere(
-    //         (item) => item['id'] == selectedPrionaityId,
-    //         orElse: () => Folowtype[0],
-    //       );
-    //     });
-    //   });
   }
 
   @override
@@ -1252,10 +1226,10 @@ class _FollowUpScreenState extends State<FollowUpScreen> {
                                         ],
                                       ),
                                     )).toList(),
-                                value: selectedValue,
+                                value: selectedValue1,
                                 onChanged: (value) {
                                   setState(() {
-                                    selectedValue = value;
+                                    selectedValue1 = value;
                                   });
                                 },
                                 buttonStyleData: const ButtonStyleData(
@@ -1736,7 +1710,7 @@ class _FollowUpScreenState extends State<FollowUpScreen> {
             splController.text = data['remark_Special'] ?? '';
             selectedPrionaityId = data['priority'];
             followupid = data['follow_Type'];
-            selectedValue = Prionaity.firstWhere(
+            selectedValue1 = Prionaity.firstWhere(
               (item) => item['id'] == selectedPrionaityId,
               orElse: () => Prionaity[0],
             );
@@ -1749,14 +1723,14 @@ class _FollowUpScreenState extends State<FollowUpScreen> {
               orElse: () => dateList[0],
             );
 
-            print(selectedPrionaityId);
+
+            // print(selectedPrionaityId);
             print(3);
           });
         } else {
           ContactController.clear();
           RemarksController.clear();
           splController.clear();
-          
 
           print("Empty data list");
         }
@@ -1806,4 +1780,6 @@ class _FollowUpScreenState extends State<FollowUpScreen> {
   //     print('Error: $error');
   //   }
   // }
+
+
 }

@@ -1,8 +1,9 @@
+// ignore_for_file: unused_import, duplicate_import, unnecessary_import
+
 import 'dart:async';
 import 'dart:convert';
 import 'package:autowheelapp/screen/master/PurchaseInvoice.dart';
 import 'package:autowheelapp/showroom/FollowUpScreen.dart';
-import 'package:autowheelapp/showroom/id.dart';
 import 'package:autowheelapp/utils/widget/String.dart';
 import 'package:autowheelapp/utils/widget/widget.dart';
 import 'package:flutter/cupertino.dart';

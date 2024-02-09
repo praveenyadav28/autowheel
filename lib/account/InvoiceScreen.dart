@@ -2,6 +2,7 @@
 
 import 'dart:convert';
 import 'package:autowheelapp/labour/Addlabour.dart';
+
 import 'package:autowheelapp/models/Staffmodelpage.dart';
 import 'package:autowheelapp/models/hsnmodel.dart';
 import 'package:autowheelapp/models/manufacturemodel.dart';
@@ -10,6 +11,7 @@ import 'package:autowheelapp/screen/Jobcard/Addpartpurchessinvoic.dart';
 import 'package:autowheelapp/showroom/Prosepet.dart';
 import 'package:autowheelapp/utils/widget/String.dart';
 import 'package:autowheelapp/utils/color/Appcolor.dart';
+import 'package:autowheelapp/utils/widget/learnng.dart';
 import 'package:autowheelapp/utils/widget/widget.dart';
 import 'package:csc_picker/csc_picker.dart';
 import 'package:flutter/material.dart';
@@ -18,8 +20,7 @@ import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 
 class InvoiveScreen extends StatefulWidget {
-  double? spareamount = 0.0000;
-  InvoiveScreen({this.spareamount, super.key});
+  InvoiveScreen({super.key});
 
   @override
   State<InvoiveScreen> createState() => _InvoiveScreenState();
@@ -28,6 +29,7 @@ class InvoiveScreen extends StatefulWidget {
 late TimeOfDay selectedTime2 = TimeOfDay.now();
 
 class _InvoiveScreenState extends State<InvoiveScreen> {
+  final InvoiceController invoiceController = Get.put(InvoiceController());
   String so = "Model";
   List co = ['Model', 'Case Book', 'Sbi Bank'];
   String cr = "Sales Man";
@@ -435,11 +437,8 @@ class _InvoiveScreenState extends State<InvoiveScreen> {
                         underline: Container(),
                         value: so,
                         dropdownColor: Color.fromRGBO(211, 247, 212, 1),
-                        icon: Padding(
-                          padding: const EdgeInsets.only(right: 10),
-                          child: Icon(Icons.keyboard_arrow_down_outlined,
-                              size: h * 0.030, color: AppColor.kBlack),
-                        ),
+                        icon: Icon(Icons.keyboard_arrow_down_outlined,
+                            size: h * 0.030, color: AppColor.kBlack),
                         isExpanded: true,
                         items: co.map((value) {
                           return DropdownMenuItem(
@@ -520,8 +519,7 @@ class _InvoiveScreenState extends State<InvoiveScreen> {
                               ).toList(),
                             ),
                           ),
-                          Icon(Icons
-                              .keyboard_arrow_down_rounded), // Add this line to position the icon at the end
+                          Icon(Icons.keyboard_arrow_down_rounded),
                         ],
                       ),
                     ),
@@ -568,11 +566,8 @@ class _InvoiveScreenState extends State<InvoiveScreen> {
                         underline: Container(),
                         value: Place,
                         dropdownColor: const Color.fromARGB(255, 211, 247, 212),
-                        icon: Padding(
-                          padding: const EdgeInsets.only(right: 10),
-                          child: Icon(Icons.keyboard_arrow_down_outlined,
-                              size: h * 0.030, color: AppColor.kBlack),
-                        ),
+                        icon: Icon(Icons.keyboard_arrow_down_outlined,
+                            size: h * 0.030, color: AppColor.kBlack),
                         isExpanded: true,
                         items: Supping.map((value) {
                           return DropdownMenuItem(
@@ -694,17 +689,22 @@ class _InvoiveScreenState extends State<InvoiveScreen> {
                   },
                   child: Button("Add Labour")),
               addVerticalSpace(10),
-              Rowdata("Total spare", "${widget.spareamount}"),
+              Obx(() =>
+                  Rowdata("Total spare", "${invoiceController.totalSpare}")),
               addVerticalSpace(10),
-              Rowdata("Total Labour", "0000"),
+              Obx(() =>
+                  Rowdata("Total Labour", "${invoiceController.totalLabour}")),
               addVerticalSpace(10),
-              Rowdata("IGST", "0000"),
+              Obx(() => Rowdata("IGST", "${invoiceController.totalGst}")),
               addVerticalSpace(10),
-              Rowdata("SGST", "0000"),
+              Rowdata("SGST", "0.0"),
               addVerticalSpace(10),
-              Rowdata("CGST", "0000"),
+              Rowdata("CGST", "0.0"),
               addVerticalSpace(10),
               Rowdata("discount", "0000"),
+              addVerticalSpace(10),
+              Obx(() => Rowdata("Net Amount",
+                  "${invoiceController.totalSpare.toInt() + invoiceController.totalLabour.toInt() + invoiceController.totalGst.toInt()}")),
               addVerticalSpace(10),
 
               Padding(

@@ -155,36 +155,6 @@ class _RigisterScreenState extends State<RigisterScreen> {
       ),
     );
   }
-
-  TextFormField textfild(String? labelText, TextEditingController? controller,
-      TextInputType? keyboardType, bool readOnly, String? hintText) {
-    return TextFormField(
-      readOnly: readOnly,
-      controller: controller,
-      textCapitalization: TextCapitalization.words,
-      keyboardType: keyboardType,
-      textInputAction: TextInputAction.done,
-      // onChanged: (value) {},
-      decoration: InputDecoration(
-          hintText: hintText,
-          counterText: "",
-          labelText: labelText,
-          labelStyle: TextStyle(fontWeight: FontWeight.bold),
-          contentPadding: EdgeInsets.all(5),
-          enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(width: 2.0, color: Colors.black),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(width: 2.0, color: Colors.black),
-          ),
-          errorBorder: OutlineInputBorder(
-            borderSide: BorderSide(width: 5.0, color: Colors.red),
-          ),
-          border: OutlineInputBorder(
-            borderSide: BorderSide(width: 5),
-          )),
-    );
-  }
   Future<void> localData() async {
     try {
       print("1");

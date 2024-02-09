@@ -4,6 +4,9 @@ import 'package:autowheelapp/Report/BillReport.dart';
 import 'package:autowheelapp/account/InvoiceScreen.dart';
 import 'package:autowheelapp/account/livedomo.dart';
 import 'package:autowheelapp/labour/Prcheasepart.dart';
+import 'package:autowheelapp/labour/utils.dart';
+import 'package:autowheelapp/screen/master/id.dart';
+import 'package:autowheelapp/utils/widget/learnng.dart';
 import 'package:autowheelapp/routes/Approutes.dart';
 import 'package:autowheelapp/screen/Intro/Business1Screen.dart';
 import 'package:autowheelapp/screen/Intro/Businesstype3.dart';
@@ -32,7 +35,6 @@ import 'package:autowheelapp/showroom/CompantScreen.dart';
 import 'package:autowheelapp/showroom/Datevisedeta.dart';
 import 'package:autowheelapp/showroom/FollowUpScreen.dart';
 import 'package:autowheelapp/showroom/Prosepet.dart';
-import 'package:autowheelapp/showroom/id.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -63,7 +65,7 @@ class MyApp extends StatelessWidget {
             ),
             home: snapshot.data == ConnectivityResult.none
                 ? NoInternetScreen()
-                : Splash(),
+                : InvoiveScreen(),
             builder: (context, child) {
               return MediaQuery(
                 data: MediaQuery.of(context).copyWith(textScaleFactor: 0.85),

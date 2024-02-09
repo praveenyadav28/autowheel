@@ -1,4 +1,5 @@
 import 'package:autowheelapp/account/InvoiceScreen.dart';
+import 'package:autowheelapp/utils/widget/learnng.dart';
 import 'package:autowheelapp/models/Addinvoicpurchaiss.dart';
 import 'package:autowheelapp/screen/master/PartmasterScreen.dart';
 import 'package:autowheelapp/utils/color/Appcolor.dart';
@@ -29,6 +30,8 @@ TextEditingController GrossAmt = TextEditingController();
 TextEditingController workDiscController = TextEditingController();
 
 class _JobcardLabourscreenState extends State<JobcardLabourscreen> {
+  final InvoiceController invoiceController = Get.find();
+
   @override
   void initState() {
     super.initState();
@@ -43,7 +46,7 @@ class _JobcardLabourscreenState extends State<JobcardLabourscreen> {
   List<Widget> containers = [];
   List addedItemList = [];
   List addedItemListLabour = [];
-
+  double _grossAmountDouble = 0.0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,18 +55,6 @@ class _JobcardLabourscreenState extends State<JobcardLabourscreen> {
           toolbarHeight: 30,
           centerTitle: true,
           title: Text("Add labour "),
-          actions: [
-            ElevatedButton(
-                onPressed: () {
-                  Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => InvoiveScreen(
-                                spareamount: totallabouramt(),
-                              )));
-                },
-                child: Text("All Data"))
-          ],
           backgroundColor: AppColor.kappabrcolr),
       body: hsnModels.isEmpty
           ? Center(
@@ -124,7 +115,10 @@ class _JobcardLabourscreenState extends State<JobcardLabourscreen> {
                                   quantityController.text =
                                       selectedModel.orderQty.toString();
 
-                                  setState(() {});
+                                  setState(() {
+                                    _grossAmountDouble =
+                                        double.parse(GrossAmt.text);
+                                  });
                                 },
                               ),
                             ),
@@ -246,6 +240,19 @@ class _JobcardLabourscreenState extends State<JobcardLabourscreen> {
                       InkWell(
                           onTap: () {
                             addButtonPressed();
+                            double laborPrice = _grossAmountDouble;
+                            double gst = 0.05;
+                            invoiceController.addLabor(laborPrice, gst);
+                          },
+                          child: Button("Details")),
+                      addVerticalSpace(10),
+                      InkWell(
+                          onTap: () {
+                            addButtonPressed();
+                            double laborPrice = _grossAmountDouble;
+                            double gst = 0.05;
+                            invoiceController.addLabor(laborPrice, gst);
+                            Get.back();
                           },
                           child: Button("Save")),
                       addVerticalSpace(10),
@@ -336,21 +343,31 @@ class _JobcardLabourscreenState extends State<JobcardLabourscreen> {
 
   void _updateNetAmt() {
     try {
-      double grossAmt = double.parse(GrossAmt.text);
+      double mrp = double.parse(GrossAmt.text);
       double gstPercentage = double.parse(gstController.text);
-      double gstAmount = (gstPercentage / 100) * grossAmt;
 
-      double cgstAmount = gstAmount / 2;
-      double sgstAmount = gstAmount / 2;
+      // Calculate GST amount included in MRP
+      double gstAmountIncludedInMrp =
+          (gstPercentage / (100 + gstPercentage)) * mrp;
 
-      double netAmt = grossAmt + gstAmount;
+      // Calculate Gross Amount excluding GST
+      double grossAmtExcludingGst = mrp - gstAmountIncludedInMrp;
 
-      netamtConrroller.text = netAmt.toStringAsFixed(2);
+      double cgstAmount = gstAmountIncludedInMrp / 2;
+      double sgstAmount = gstAmountIncludedInMrp / 2;
+
+      // Calculate Net Amount excluding GST
+      double netAmtExcludingGst = grossAmtExcludingGst;
+
+      netamtConrroller.text = netAmtExcludingGst.toStringAsFixed(2);
 
       cgstcontroller.text = cgstAmount.toStringAsFixed(2);
       sgstcontroller.text = sgstAmount.toStringAsFixed(2);
-      double remainingAmount = netAmt - grossAmt;
-      igstcontroller.text = remainingAmount.toStringAsFixed(2);
+
+      // Calculate IGST as the remaining amount after subtracting GST from Gross Amount
+      double igstAmount = mrp - grossAmtExcludingGst;
+      igstcontroller.text = igstAmount.toStringAsFixed(2);
+
       setState(() {});
     } catch (e) {
       print('Error calculating net amount: $e');
@@ -385,6 +402,7 @@ class _JobcardLabourscreenState extends State<JobcardLabourscreen> {
       "workDisc": workDiscController.text,
       "quantity": quantityController.text,
       "gst": gstController.text,
+      "Igst": igstcontroller.text,
       "gross": GrossAmt.text.toString(),
       "netamt": double.parse(gross),
       "netamtValue": netamtConrroller.text
@@ -405,9 +423,25 @@ class _JobcardLabourscreenState extends State<JobcardLabourscreen> {
   totallabouramt() {
     double amount1 = 0;
     for (var i = 0; i < addedItemList.length; i++) {
-      amount1 += double.parse(addedItemList[i]['gross'].toString());
+      amount1 += double.parse(addedItemList[i]['netamtValue'].toString());
     }
     return amount1;
+  }
+
+  totalgstamt() {
+    double amount2 = 0;
+    for (var i = 0; i < addedItemList.length; i++) {
+      amount2 += double.parse(addedItemList[i]['Igst'].toString());
+    }
+    return amount2;
+  }
+
+  totalgrossamt() {
+    double amount3 = 0;
+    for (var i = 0; i < addedItemList.length; i++) {
+      amount3 += double.parse(addedItemList[i]['gross'].toString());
+    }
+    return amount3;
   }
 
   void clearControllers() {

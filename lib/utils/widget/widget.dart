@@ -54,7 +54,8 @@ TextFormField textformfiles(
           borderSide: const BorderSide(color: Colors.black)),
       errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(5),
-          borderSide: const BorderSide(color: Colors.black, width: 2)),
+          borderSide: const BorderSide(
+              color: Color.fromARGB(255, 151, 81, 81), width: 2)),
       enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(5),
           borderSide: const BorderSide(color: Colors.black, width: 2)),
@@ -231,4 +232,29 @@ class StaticData {
       }
     }
   }
+}
+
+class modal {
+ final int group = 1;
+ final int title = 2;
+ final int sale_certifier = 3;
+ final int unit = 3;
+ final int colors = 5;
+ final int vehicle = 6;
+ final int ledger_group = 9;
+ final int labour_group = 8;
+ final int service_type = 7;
+ final int source = 18;
+ final int destination = 28;
+ final int department = 27;
+ final int state = 13;
+ final int bank_mode = 14;
+ final int category = 15;
+ final int dealer_category = 20;
+ final int enq_type = 18;
+ final int occupation = 23;
+ final int priority = 22;
+ final int product = 19;
+ final int test_id = 21;
+ final int follow_type_id = 17;
 }

@@ -89,40 +89,7 @@ class _Spare_Parts_cetegoryState extends State<Spare_Parts_cetegory> {
                   ),
                 ],
               ),
-              // Row(
-              //   children: [
-              //     Expanded(
-              //       child: textformfiles(
-              //         cetegorycon,
-              //         validator: (p0) {},
-              //         label: textcostam(igsttext, 15, AppColor.kBlack),
-              //       ),
-              //     ),
-              //     addhorizontalSpace(15),
-              //     Expanded(
-              //       child: textformfiles(
-              //         cetegorycon,
-              //         validator: (p0) {},
-              //         label: textcostam(
-              //           sgstxt,
-              //           15,
-              //           AppColor.kBlack,
-              //         ),
-              //         // prefixIcon: Icon(Icons.search)
-              //       ),
-              //     ),
-              //     addhorizontalSpace(10),
-              //     Expanded(
-              //       child: textformfiles(
-              //         cetegorycon,
-              //         validator: (p0) {},
-              //         label: textcostam(cgsttxt, 15, AppColor.kBlack),
-              //         // prefixIcon: Icon(Icons.search)
-              //       ),
-              //     ),
-              //   ],
-              // ),
-              addVerticalSpace(10),
+                          addVerticalSpace(10),
               Button("Save"),
               addVerticalSpace(10),
               redButton(delettxt)

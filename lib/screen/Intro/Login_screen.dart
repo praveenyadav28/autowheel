@@ -1,10 +1,8 @@
 import 'package:autowheelapp/screen/Intro/HomePage.dart';
 import 'package:autowheelapp/showroom/FollowUpScreen.dart';
 import 'package:autowheelapp/showroom/Prosepet.dart';
-import 'package:autowheelapp/showroom/id.dart';
 import 'package:autowheelapp/utils/widget/String.dart';
 import 'package:autowheelapp/utils/color/Appcolor.dart';
-
 import 'package:autowheelapp/utils/widget/widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -203,7 +201,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
-                    // crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       SizedBox(
                         width: 20,
@@ -211,11 +208,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             activeColor: AppColor.kBlue,
                             value: isshow,
                             onChanged: (e) {
-                              // setState(() {
-                              //   print(1);
-                              //   isshow = !isshow;
-                              // });
-                            }),
+                                                 }),
                       ),
                       addhorizontalSpace(20),
                       Center(
@@ -248,13 +241,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             fontWeight: FontWeight.bold),
                       ),
                     )),
-
-                // SizedBox(
-                //   height: 10,
-                // ),
-                // Center(child: Text("Create an account")),
-
-              ],
+                      ],
             ),
           ),
         ),

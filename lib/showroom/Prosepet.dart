@@ -687,38 +687,6 @@ class _ProsepetScreenState extends State<ProsepetScreen> {
                               ),
                             ),
                           ),
-                          //     dropdownTextfield(
-                          //   "Enqtype",
-                          //   DropdownButton(
-                          //     underline: Container(),
-                          //     value: selectedEnqtypeName,
-                          //     dropdownColor:
-                          //         const Color.fromARGB(255, 211, 247, 212),
-                          //     icon: Icon(Icons.keyboard_arrow_down_outlined,
-                          //         size: h * 0.030, color: AppColor.kBlack),
-                          //     isExpanded: true,
-                          //     items: Enqtype.map((item) {
-                          //       return DropdownMenuItem(
-                          //         value: item['name'],
-                          //         child: Text(
-                          //           item['name'],
-                          //           style: TextStyle(fontWeight: FontWeight.bold),
-                          //         ),
-                          //       );
-                          //     }).toList(),
-                          //     onChanged: (value) {
-                          //       setState(() {
-                          //         selectedEnqtypeName = value.toString();
-                          //         selectedEnqtypeId = Enqtype.firstWhere(
-                          //                     (item) => item['name'] == value)
-                          //                 .containsKey('id')
-                          //             ? Enqtype.firstWhere(
-                          //                 (item) => item['name'] == value)['id']
-                          //             : null;
-                          //       });
-                          //     },
-                          //   ),
-                          // )
                         ),
                         addhorizontalSpace(10),
                         SizedBox(
@@ -856,39 +824,6 @@ class _ProsepetScreenState extends State<ProsepetScreen> {
                               ),
                             ),
                           ),
-                          //     dropdownTextfield(
-                          //   "Occuption",
-                          //   DropdownButton(
-                          //     underline: Container(),
-                          //     value: selectedOccuptionName,
-                          //     dropdownColor:
-                          //         const Color.fromARGB(255, 211, 247, 212),
-                          //     icon: Icon(Icons.keyboard_arrow_down_outlined,
-                          //         size: h * 0.030, color: AppColor.kBlack),
-                          //     isExpanded: true,
-                          //     items: Occuption.map((item) {
-                          //       return DropdownMenuItem(
-                          //         value: item['name'],
-                          //         child: Text(
-                          //           item['name'],
-                          //           style: TextStyle(fontWeight: FontWeight.bold),
-                          //         ),
-                          //       );
-                          //     }).toList(),
-                          //     onChanged: (value) {
-                          //       setState(() {
-                          //         selectedOccuptionName = value.toString();
-                          //         selectedOccuptionId = Occuption.firstWhere(
-                          //                     (item) => item['name'] == value)
-                          //                 .containsKey('id')
-                          //             ? Occuption.firstWhere(
-                          //                 (item) => item['name'] == value)['id']
-                          //             : null;
-                          //         log(selectedOccuptionId.toString());
-                          //       });
-                          //     },
-                          //   ),
-                          // )
                         ),
                         addhorizontalSpace(10),
                         SizedBox(
@@ -1094,40 +1029,6 @@ class _ProsepetScreenState extends State<ProsepetScreen> {
                               ),
                             ),
                           ),
-                          //     dropdownTextfield(
-                          //   "Sousce",
-                          //   DropdownButton(
-                          //     underline: Container(),
-                          // value: selectedGroupName,
-                          //     dropdownColor:
-                          //         const Color.fromARGB(255, 211, 247, 212),
-                          //     icon: Icon(Icons.keyboard_arrow_down_outlined,
-                          //         size: h * 0.030, color: AppColor.kBlack),
-                          //     isExpanded: true,
-                          //     items: drop.map((item) {
-                          //       return DropdownMenuItem(
-                          //         value: item['name'],
-                          //         child: Text(
-                          //           item['name'],
-                          //           style: TextStyle(fontWeight: FontWeight.bold),
-                          //         ),
-                          //       );
-                          //     }).toList(),
-                          //     onChanged: (value) {
-                          //       setState(() {
-                          //         selectedGroupName = value.toString();
-                          //         selectedGroupId = drop
-                          //                 .firstWhere(
-                          //                     (item) => item['name'] == value)
-                          //                 .containsKey('id')
-                          //             ? drop.firstWhere(
-                          //                 (item) => item['name'] == value)['id']
-                          //             : null;
-                          //         log(selectedGroupId.toString());
-                          //       });
-                          //     },
-                          //   ),
-                          // )
                         ),
                         addhorizontalSpace(10),
                         SizedBox(
@@ -1693,40 +1594,6 @@ class _ProsepetScreenState extends State<ProsepetScreen> {
                               ),
                             ),
                           ),
-                          //   dropdownTextfield(
-                          // "Test",
-                          // DropdownButton(
-                          //   underline: Container(),
-                          //   value: selectedTestName,
-                          //   dropdownColor:
-                          //       const Color.fromARGB(255, 211, 247, 212),
-                          //   icon: Icon(Icons.keyboard_arrow_down_outlined,
-                          //       size: h * 0.030, color: AppColor.kBlack),
-                          //   isExpanded: true,
-                          //   items: Test.map((item) {
-                          //     return DropdownMenuItem(
-                          //       value: item['name'],
-                          //       child: Text(
-                          //         item['name'],
-                          //         style: TextStyle(fontWeight: FontWeight.bold),
-                          //       ),
-                          //     );
-                          //   }).toList(),
-                          //   onChanged: (value) {
-                          //     setState(() {
-                          //       selectedTestName = value.toString();
-                          //       selectedTestId = Test.firstWhere(
-                          //                   (item) => item['name'] == value)
-                          //               .containsKey('id')
-                          //           ? Test.firstWhere(
-                          //               (item) => item['name'] == value)['id']
-                          //           : null;
-                          //       log(selectedTestId.toString());
-                          //       // print(selectedTestId.toString());
-                          //     });
-                          //   },
-                          // ),
-                          // )
                         ),
                         addhorizontalSpace(10),
                         SizedBox(
@@ -2307,7 +2174,7 @@ class _ProsepetScreenState extends State<ProsepetScreen> {
   Future<dynamic> autoperfixnumbar() async {
     final response = await http.get(
       Uri.parse(
-          'http://lms.muepetro.com/api/UserController1/GetInvoiceNo?Tblname=Prospect&Fldname=Ref_No&transdatefld=Ref_Date&varprefixtblname=Prefix_Name&prefixfldnText=%27Online%27&varlocationid=1'),
+          'http://lms.muepetro.com/api/UserController1/GetInvoiceNo?Tblname=Prospect&Fldname=Ref_No&transdatefld=Ref_Date&varprefixtblname=Prefix_Name&prefixfldnText=%27Online%27&varlocationid="${loctionid}"'),
       headers: {
         "Content-Type": "application/json",
       },
@@ -2335,6 +2202,7 @@ class _ProsepetScreenState extends State<ProsepetScreen> {
       print(e);
     }
   }
+
 }
 
 Widget dropdownTextfield(

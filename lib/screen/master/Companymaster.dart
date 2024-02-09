@@ -511,8 +511,7 @@ class _CompanyMasterScreenState extends State<CompanyMasterScreen> {
 
       if (response.statusCode == 200) {
         var res = jsonDecode(response.body);
-        // itemData = res;
-        if (res is Map<String, dynamic>) {
+         if (res is Map<String, dynamic>) {
           modalData = CompanyResponse.fromJson(res);
           BusinessName.text = modalData!.tradeNam.toString();
           AddressController.text = modalData!.pradr.addr.st.toString();
@@ -527,4 +526,6 @@ class _CompanyMasterScreenState extends State<CompanyMasterScreen> {
       print('Error occurred: $e');
     }
   }
+
 }
+
